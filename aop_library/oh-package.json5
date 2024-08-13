@@ -1,0 +1,11 @@
+{
+  "name": "@huolala/aspectpro",
+  "version": "1.0.0-rc.1",
+  "description": "AspectPro是一款轻量级的鸿蒙运行时hook框架(配合aspectProPlugin可实现任意代码hook)",
+  "main": "Index.ts",
+  "author": "gk",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@huolala/logger": "^1.0.0"
+  }
+}

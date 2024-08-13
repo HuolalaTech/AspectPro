@@ -1,0 +1,20 @@
+# 此配置文件仅做使用说明，实际只有需放到 你的工程目录下 比如entry/aspectProPluginConfig.txt
+
+# 配置规则说明 - plugin 按行读取配置文件 (默认读取hvigor-file同级目录 所有.js 、.ts 、 .ets文件)
+# -hook path ｜ file : 配置需要hook 处理的文件目录 | 文件
+# -keep path ｜ file : 配置需要额外 keep 的目录 | 文件  (非必需， 当-hook 的文件目录中有一些特殊文件，不需要处理时，配合使用)
+# -replace pattern replacement [import xxx';import xxx] : 配置需要进行替换的正则表达式和对应的替换内容 [import aaa;import bbb] 同时需要新导入的依赖
+
+# 比如:
+-hook ./src/main/ets/
+-keep ./src/main/ets/hook/
+-replace router.pushUrl( this.getUIContext().getRouter().pushUrl(
+#-replace router.pushUrl( this.getUIContext().getRouter().pushUrl( [import { Logger } from '@huolala/logger';]
+
+#支持三方库代码替换
+# 比如：
+-hook ./oh_modules/@huolala/logger/src/main/com.wp/Logger.ts
+-replace Logger.i( Logger.e(
+
+# AspectPro库都keep
+-keep ./oh_modules/@huolala/aspectpro/
