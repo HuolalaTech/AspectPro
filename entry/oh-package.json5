@@ -1,0 +1,16 @@
+{
+  "name": "entry",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@huolala/aspectpro": "file:../aop_library",
+    "@huolala/logger": "^1.0.0",
+    "@ohos/httpclient": "^2.0.0",
+//    "@huolala/aspectpro": "^1.0.0-rc.1"
+  },
+  "devDependencies": {},
+  "dynamicDependencies": {}
+}
