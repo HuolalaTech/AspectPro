@@ -1,0 +1,1 @@
+"use strict";function exit(e){"win32"===process.platform&&process.stdout.writableLength?process.stdout.once("drain",(function(){process.exit(e)})):process.exit(e)}Object.defineProperty(exports,"__esModule",{value:!0}),exports.exit=void 0,exports.exit=exit;

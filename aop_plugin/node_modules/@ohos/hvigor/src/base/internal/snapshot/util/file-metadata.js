@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.FileMetaData=void 0;class FileMetaData{constructor(e=0,t=0){this.size=e,this.lastModifiedTime=t}equals(e){return this.size===e.size&&this.lastModifiedTime===e.lastModifiedTime}}exports.FileMetaData=FileMetaData;

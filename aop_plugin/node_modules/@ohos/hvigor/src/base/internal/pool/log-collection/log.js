@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.generateScheduleLog=void 0;const log_type_js_1=require("../enum/log-type.js");function generateScheduleLog(e,t,o){return{type:log_type_js_1.LogType.SCHEDULE,time:e,workId:t,workerId:o}}exports.generateScheduleLog=generateScheduleLog;

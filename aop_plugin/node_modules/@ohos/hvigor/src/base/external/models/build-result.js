@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.BuildResult=void 0;class BuildResult{constructor(r,e=null){this.error=r,this.report=e}getError(){return this.error}getReportJson(){return this.report}}exports.BuildResult=BuildResult;

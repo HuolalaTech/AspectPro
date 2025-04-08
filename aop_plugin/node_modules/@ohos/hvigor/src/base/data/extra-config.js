@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.getExtraConfig=exports.setExtraConfig=void 0;let extraConfig=new Map;function setExtraConfig(t){extraConfig=t}function getExtraConfig(t){return extraConfig.get(t)}exports.setExtraConfig=setExtraConfig,exports.getExtraConfig=getExtraConfig;

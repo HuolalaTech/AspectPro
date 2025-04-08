@@ -1,0 +1,1 @@
+"use strict";var SnapshotVisitResult;Object.defineProperty(exports,"__esModule",{value:!0}),exports.SnapshotVisitResult=void 0,function(t){t[t.CONTINUE=0]="CONTINUE",t[t.TERMINATE=1]="TERMINATE",t[t.SKIP_SUBTREE=2]="SKIP_SUBTREE"}(SnapshotVisitResult=exports.SnapshotVisitResult||(exports.SnapshotVisitResult={}));

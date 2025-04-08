@@ -1,0 +1,1 @@
+"use strict";var DaemonState;Object.defineProperty(exports,"__esModule",{value:!0}),exports.DaemonState=void 0,function(e){e.IDLE="idle",e.HALF_BUSY="half_busy",e.BUSY="busy",e.CANCELED="canceled",e.STOP_REQ="stopReq",e.STOPPED="stopped",e.BROKEN="broken"}(DaemonState=exports.DaemonState||(exports.DaemonState={}));

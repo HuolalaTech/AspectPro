@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.DefaultInternalTask=void 0;const core_task_impl_js_1=require("../../../external/task/core-task-impl.js");class DefaultInternalTask extends core_task_impl_js_1.CoreTaskImpl{constructor(e,s,t){super(e,s),this.fn=t}}exports.DefaultInternalTask=DefaultInternalTask;

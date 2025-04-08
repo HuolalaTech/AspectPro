@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.LogCollector=void 0;class LogCollector{constructor(){this.logSet=new Set}add(e){this.logSet.add(e)}dump(){return this.logSet}clear(){this.logSet.clear()}}exports.LogCollector=LogCollector;

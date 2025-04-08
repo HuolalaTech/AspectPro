@@ -1,0 +1,1 @@
+"use strict";function createOutput(t,e,u){return{type:t,text:e,encoding:u}}function createBuildStatus(t,e,u){return{status:t,exitCode:e,reason:u}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.createBuildStatus=exports.createOutput=void 0,exports.createOutput=createOutput,exports.createBuildStatus=createBuildStatus;

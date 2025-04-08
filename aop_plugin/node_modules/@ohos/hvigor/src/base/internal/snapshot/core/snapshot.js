@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.Snapshot=void 0;class Snapshot{}exports.Snapshot=Snapshot;

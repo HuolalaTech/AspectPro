@@ -1,0 +1,1 @@
+"use strict";var __importDefault=this&&this.__importDefault||function(t){return t&&t.__esModule?t:{default:t}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.tableInit=void 0;const path_1=__importDefault(require("path")),tableInit=function(t){return require(path_1.default.resolve(__dirname,`../../../../../../res/${t}`))};exports.tableInit=tableInit;

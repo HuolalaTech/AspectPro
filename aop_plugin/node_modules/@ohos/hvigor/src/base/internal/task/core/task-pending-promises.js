@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.TaskPendingPromises=void 0;class TaskPendingPromises{constructor(){this.promiseSet=new Set}add(e){this.promiseSet.add(e)}get(){return[...this.promiseSet]}clear(){this.promiseSet.clear()}}exports.TaskPendingPromises=TaskPendingPromises;

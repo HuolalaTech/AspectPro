@@ -1,0 +1,1 @@
+"use strict";var WorkerPoolType;Object.defineProperty(exports,"__esModule",{value:!0}),exports.WorkerPoolType=void 0,function(o){o[o.LOCAL=0]="LOCAL"}(WorkerPoolType=exports.WorkerPoolType||(exports.WorkerPoolType={}));

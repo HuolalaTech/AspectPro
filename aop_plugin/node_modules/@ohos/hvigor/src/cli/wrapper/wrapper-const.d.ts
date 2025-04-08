@@ -1,0 +1,14 @@
+export declare const HVIGOR_PACKAGE_NAME: any;
+export declare const CUR_HVIGOR_VERSION: any;
+export declare const HVIGOR_PROJECT_ROOT_DIR: string;
+export declare const DEFAULT_PROJECT_NODE_PATH: string | undefined;
+export declare const PNPM_TOOL: string;
+export declare const DEFAULT_HVIGOR_CONFIG_JSON_FILE_NAME = "hvigor-config.json5";
+export declare const DEFAULT_PACKAGE_JSON = "package.json";
+export declare const META_DATA_JSON = "metadata.json";
+export declare const HVIGOR_USER_HOME: string;
+export declare const HVIGOR_WRAPPER_TOOLS_HOME: string;
+export declare const HVIGOR_WRAPPER_PNPM_SCRIPT_PATH: string;
+export declare const HVIGOR_PNPM_STORE_PATH: string;
+export declare const HVIGOR_PROJECT_WRAPPER_HOME: string;
+export declare const WORK_SPACE = "workspace";

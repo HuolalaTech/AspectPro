@@ -1,0 +1,15 @@
+{
+  "name": "aspect-pro-plugin",
+  "version": "1.0.0",
+  "description": "aspect-pro-plugin is a harmonyos code comlipation and modify plugin for hvigor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "gk",
+  "license": "ISC",
+  "devDependencies": {
+    "@ohos/hvigor": "5.2.2"
+  }
+}
+

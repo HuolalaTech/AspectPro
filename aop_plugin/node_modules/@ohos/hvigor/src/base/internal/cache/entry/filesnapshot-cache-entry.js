@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.FileSnapShotCacheEntry=void 0;const cache_entry_js_1=require("./cache-entry.js");class FileSnapShotCacheEntry extends cache_entry_js_1.CacheEntry{constructor(e,t){super(e,t)}}exports.FileSnapShotCacheEntry=FileSnapShotCacheEntry;

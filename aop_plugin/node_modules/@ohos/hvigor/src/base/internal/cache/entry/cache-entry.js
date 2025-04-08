@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.CacheEntry=void 0;class CacheEntry{constructor(t,e){this._key=t,this._content=e}getKey(){return this._key}getContent(){return this._content}}exports.CacheEntry=CacheEntry;

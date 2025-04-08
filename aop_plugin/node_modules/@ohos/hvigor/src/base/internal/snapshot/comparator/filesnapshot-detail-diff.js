@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.FileSnapshotDetailDiff=void 0;class FileSnapshotDetailDiff{constructor(){this.addedNodes=[],this.updatedNodes=[],this.removedNodes=[]}}exports.FileSnapshotDetailDiff=FileSnapshotDetailDiff;
