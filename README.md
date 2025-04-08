@@ -45,7 +45,7 @@ ohpm i @huolala/aspectpro
 **Plugin Dependency<optional>**
 1.Add the following to the project's root directory, in hvigor/hvigor-config.json5
 "dependencies": {
-    "aspect-pro-plugin": "0.0.7"
+    "aspect-pro-plugin": "1.0.0"
   }
   
 2.Add the following to the entry's  hvigorfile.ts
@@ -163,7 +163,7 @@ to[How to install OpenHarmony ohpm package](https://gitee.com/openharmony-tpc/do
      * Plugin Configuration Needed:
      * 1. add plugin in hvigor/hvigor-config.json5
       "dependencies": {
-         "aspect-pro-plugin": "0.0.7"
+         "aspect-pro-plugin": "1.0.0"
        }
      *  
      * 2.add in entry's hvigorfile.ts 

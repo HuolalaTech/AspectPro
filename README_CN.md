@@ -34,7 +34,7 @@ ohpm i @huolala/aspectpro
 **Plugin 依赖<optional>**
 1.添加插件依赖,在工程的hvigor/hvigor-config.json5文件中配置
 "dependencies": {
-    "aspect-pro-plugin": "0.0.7"
+    "aspect-pro-plugin": "1.0.0"
   }
   
 2.使用插件在entry或其他模块的 hvigorfile.ts文件中添加
@@ -152,7 +152,7 @@ OpenHarmony ohpm
      * Plugin Configuration Needed:
      * 1. add plugin in hvigor/hvigor-config.json5
       "dependencies": {
-         "aspect-pro-plugin": "0.0.7"
+         "aspect-pro-plugin": "1.0.0"
        }
      *  
      * 2.add in entry's hvigorfile.ts 
