@@ -5,15 +5,30 @@
         "name": "default",
         "signingConfig": "default",
         "compatibleSdkVersion": "5.0.0(12)",
-        "runtimeOS": "HarmonyOS",
+        "runtimeOS": "HarmonyOS"
       }
     ],
     "buildModeSet": [
       {
-        "name": "debug",
+        "name": "debug"
       },
       {
         "name": "release"
+      }
+    ],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/greek.chen/.ohos/config/default_AspectPro_iGfk6dij2xHWo1j0r4oCFpcZYxWpVW1v2Fkm3R0ZOo0=.cer",
+          "storePassword": "0000001BC1469B88D997DF2A8A23C2BB7CFAD39B9F8EFF4D4A796614385B928EFA2FEC5D365B6E2E1D2659",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BD7E0CF48F414E7E362223B0DFC16B8EAA73BC5BB3963C06A1758442AC664E60A4ED49F66E021DD",
+          "profile": "/Users/greek.chen/.ohos/config/default_AspectPro_iGfk6dij2xHWo1j0r4oCFpcZYxWpVW1v2Fkm3R0ZOo0=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/greek.chen/.ohos/config/default_AspectPro_iGfk6dij2xHWo1j0r4oCFpcZYxWpVW1v2Fkm3R0ZOo0=.p12"
+        }
       }
     ]
   },
@@ -33,6 +48,10 @@
     {
       "name": "aop_library",
       "srcPath": "./aop_library",
+    },
+    {
+      "name": "local_plugin",
+      "srcPath": "./local_plugin",
     }
   ]
 }

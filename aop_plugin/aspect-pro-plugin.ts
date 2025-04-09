@@ -2,7 +2,8 @@ import { hapTasks } from '@ohos/hvigor-ohos-plugin';
 import { getNode, HvigorNode, HvigorPlugin } from '@ohos/hvigor';
 
 /**
- * AspectPro-Plugin                     (源码回滚方案)
+ * 远程plugin：用于发布到nmp仓库
+ * aspect-pro-plugin                    (https://www.npmjs.com/package/aspect-pro-plugin/v/0.0.6?activeTab=versions)
  *
  * 1.-> aspectProPluginConfig.txt       配置源码相对路径(相对于RootDir)
  * 2.-> aspectProPluginInjectTask       根据配置修改源码

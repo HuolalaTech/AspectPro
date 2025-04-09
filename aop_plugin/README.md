@@ -5,20 +5,6 @@
 
 ## Introduction
 
-`AspectPro` is a lightweight HarmonyOs runtime hook framework (with aspectProPlugin, any code hook can be implemented).
-
-1. Aligns with HarmonyOS System Aspect Capabilities
-
-2. Simplifies Usage without Concern for Static Methods
-
-3. Supports Hooking Specific Method Actions (e.g., Button's onClick event)
-
-4. Supports Hooking Methods inside Inner Classes (e.g., HttpClient.Builder().build())
-
-5. Supports Hooking Methods with Writable set to False, requires aspect-pro-plugin (e.g., router.pushUrl)
-
-6. Supports Runtime Batch Hooking
-
 `aspect-pro-plugin` is a lightweight code modification framework during the compile time for HarmonyOS.
 
 1. Supports Scanning Specified Folders/Files: -hook xxx
@@ -39,16 +25,8 @@
 ## Download and Installation
 
 ```shell
-**Har Dependency**
-ohpm i @huolala/aspectpro
-
 **Plugin Dependency<optional>**
-1.Add the following to the project's root directory, in hvigor/hvigor-config.json5
-"dependencies": {
-    "aspect-pro-plugin": "1.0.0"
-  }
-  
-2.Add the following to the entry's  hvigorfile.ts
+1.Add the following to the entry's  hvigorfile.ts
 import { aspectProPlugin } from 'aspect-pro-plugin';
 export default {
   system: hapTasks, 
@@ -90,94 +68,9 @@ to[How to install OpenHarmony ohpm package](https://gitee.com/openharmony-tpc/do
 ```
    AspectPro.addBefore(TestClass1, "a", () => {
             Logger.w(TAG, "1.AspectPro add before ---- TestClass1#a() ，do your business ...");
-        })
-        
-   AspectPro.addAfter(TestClass1, "b", () => {
-            Logger.w(TAG, "1.AspectPro add after ---- TestClass1#b() ，do your business ...");
-        })
-
-   AspectPro.replace(TestClass1, "c", (origin:Function, ...args:object[]) => {
-      // 1.change params
-      let changedArgs = [...args]
-      changedArgs[0]  = new String("change param 1")
-
-      // 2.invoke origin method
-      const result:string = origin(...changedArgs)
-
-      Logger.w(TAG, "1.AspectPro replace ---- TestClass1#c() ，do your business ..."
-        + "result:"  + result);
-      // 3.change origin method return
-      return result
-    })
-
-    let newResult = new TestClass1().c("1234")
-
-    Logger.w(TAG, "newResult ..." + newResult);
-    
+        }) 
 ```
 
-* **2.2 hook Method Actions**
-
-```
-     AspectPro.addBefore(Button, "onClick", () => {
-            Logger.w(TAG, "1.AspectPro add before ---- Button#onClick()#action ，do your business ...");
-        }, true)
-```
-
-* **2.3 hook Third Sdk Method **
-
-```
-    AspectPro.hookMethod({
-            target: IdUtils,
-            methodNameOrProperty: 'uuid',
-            afterFn: () => {
-                Logger.w(TAG, "1.AspectPro hookedMethod-> afterFn ---- IdUtils#uuid() ，do your business ...");
-            }
-        })
-```
-
-* **2.4 hook nested Method**
-
-```
-    AspectPro.hookMethod({
-            target: HttpClient,
-            methodNameOrProperty: 'Builder',
-            beforeFn: (context, args) => {
-                const builderContext = context as InstanceType<typeof HttpClient.Builder>;
-                builderContext._eventListeners = new MyEventListener();
-                builderContext.addInterceptor(new MyInterceptor());
-            },
-            propertyMethodNameOrType: 'build'
-        })
-
-```
-
-* **2.5 hook Methods with (Writable = False)**
-
-```
-    AspectPro.addBefore(Router, "pushUrl", () => {
-      Logger.w(TAG, "1. AspectPro-> before ---- Router#pushUrl() ，just log ...");
-    })
-    
-     /**
-     * Plugin Configuration Needed:
-     * 1. add plugin in hvigor/hvigor-config.json5
-      "dependencies": {
-         "aspect-pro-plugin": "1.0.0"
-       }
-     *  
-     * 2.add in entry's hvigorfile.ts 
-      import { aspectProPlugin } from 'aspect-pro-plugin';
-      export default {
-           system: appTasks, /* Built-in plugin of Hvigor. It cannot be modified. */
-           plugins: [aspectProPlugin()]
-       }
-     * 
-     * 3.Create a new aspectProPluginConfig.txt in the entry's
-      -replace router.pushUrl this.getUIContext().getRouter().pushUrl
-     */
-
-```
 
 
 
