@@ -1,20 +1,5 @@
-//@ts-ignore
-import { HvigorNode, HvigorPlugin } from '@ohos/hvigor';
-//@ts-ignore
-import * as fs from 'fs';
-//@ts-ignore
-import * as path from 'path';
-//@ts-ignore
-import os from 'os';
-
-import { PluginConfigManager } from './configs/PluginConfigManager';
-import { AspectProPlugin } from './imps/aspectPro/AspectProPlugin';
-import { SlowMethodPlugin } from './imps/slowMethod/SlowMethodPlugin';
-import { ReplaceRule } from './configs/parsers/BaseConfigParser';
-
-const TAG = "HllEntryPlugin"
-
 /**
+ * @deprecated
  * <<< local_plugin 用于本地开发plugin(鸿蒙module工程)，
  *  开发完成后 -> 代码迁移到aop_plugin/(npm工程) 进行打包上传 >>>
  *
@@ -28,6 +13,23 @@ const TAG = "HllEntryPlugin"
  * 3....
  */
 
+//@ts-ignore
+import { HvigorNode, HvigorPlugin } from '@ohos/hvigor';
+//@ts-ignore
+import * as fs from 'fs';
+//@ts-ignore
+import * as path from 'path';
+//@ts-ignore
+import os from 'os';
+//@ts-ignore
+import * as ts from 'typescript';
+
+import { PluginConfigManager } from './configs/PluginConfigManager';
+import { AspectProPlugin } from './imps/aspectPro/AspectProPlugin';
+import { SlowMethodPlugin } from './imps/slowMethod/SlowMethodPlugin';
+import { ReplaceRule } from './configs/parsers/BaseConfigParser';
+
+const TAG = "HllEntryPlugin"
 let originBackUpFiles;
 const backupDir = path.join(os.tmpdir(), 'hll_plugin_backup');
 
@@ -68,14 +70,14 @@ function dispatcherToPlugins(node) {
   }
 
   // let allAspectProConfig: { allFiles: string[]; replaceRules: ReplaceRule[]; } =
-  //   PluginConfigManager.parseAspectProConfig(node.nodeDir.filePath, '../local_plugin//src/main/configs/txt/aspectProPluginConfig.txt');
+  //   PluginConfigManager.parseAspectProConfig(node.nodeDir.filePath, '../local_plugin/src/main/configs/txt/aspectProPluginConfig.txt');
   // backupOriginalFiles(allAspectProConfig.allFiles)
-  // AspectProPlugin.start(allAspectProConfig.allFiles, allAspectProConfig.replaceRules)
+  // AspectProPlugin.start(ts, allAspectProConfig.allFiles, allAspectProConfig.replaceRules)
 
   let allSlowMethodFiles: string[] =
     PluginConfigManager.parseSlowMethodConfig(node.nodeDir.filePath, '../local_plugin/src/main/configs/txt/slowMethodBlacklist.txt');
   backupOriginalFiles(allSlowMethodFiles)
-  SlowMethodPlugin.start(allSlowMethodFiles)
+  SlowMethodPlugin.start(ts, allSlowMethodFiles)
   console.warn(TAG, '------------ dispatcherToPlugins end -----------------');
 }
 

@@ -10,8 +10,7 @@ export function generateMethodID(method: ts.FunctionDeclaration
   | ts.FunctionExpression
   | ts.MethodDeclaration
   | ts.GetAccessorDeclaration
-  | ts.ArrowFunction,
-  filePath: string): string {
+  | ts.ArrowFunction,): string {
   // return `${filePath}#` + method.toString();
   return `needMethodId`;
 }

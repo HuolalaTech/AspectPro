@@ -13,13 +13,13 @@ export class SlowMethodConfigParser {
     let allFiles: string[] = [];
 
     if (filesToProcess.length > 0) {
-      allFiles = filesToProcess.flatMap(fileOrDir => {
+      allFiles = filesToProcess.reduce<string[]>((acc, fileOrDir) => {
         if (fs.statSync(fileOrDir).isDirectory()) {
-          return getAllFiles(fileOrDir, keepFiles);
+          return acc.concat(getAllFiles(fileOrDir, keepFiles));
         } else {
-          return shouldKeep(fileOrDir, keepFiles) ? [] : [fileOrDir];
+          return shouldKeep(fileOrDir, keepFiles) ? acc : acc.concat(fileOrDir);
         }
-      });
+      }, []);
     } else {
       allFiles = getAllFiles(rootDir, keepFiles);
     }

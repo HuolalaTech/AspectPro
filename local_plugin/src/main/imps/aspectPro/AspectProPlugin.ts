@@ -7,8 +7,8 @@ import { BasePluginImp } from '../BasePluginImp';
 import { AspectProTsImp } from './AspectProTsImp';
 
 export class AspectProPlugin {
-  static start(allAspectProFiles: string[], replaceRules: ReplaceRule[]) {
+  static start(ts, allAspectProFiles: string[], replaceRules: ReplaceRule[]) {
     const aspectProImp:BasePluginImp = new AspectProTsImp();
-    allAspectProFiles.forEach(filePath => aspectProImp.start(filePath, replaceRules));
+    allAspectProFiles.forEach(filePath => aspectProImp.start(ts, filePath, replaceRules));
   }
 }

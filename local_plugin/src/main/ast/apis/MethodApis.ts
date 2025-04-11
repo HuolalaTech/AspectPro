@@ -47,11 +47,10 @@ ts.FunctionDeclaration
   | ts.FunctionExpression
   | ts.MethodDeclaration
   | ts.GetAccessorDeclaration
-  | ts.ArrowFunction,
-  filePath: string): ts.Statement[] {
+  | ts.ArrowFunction): ts.Statement[] {
   const newStatements: ts.Statement[] = [];
   // 1.生成methodId
-  let methodId = generateMethodID(node, filePath)
+  let methodId = generateMethodID(node)
 
   // 2.插入方法开始点
   newStatements.push(
@@ -65,21 +64,23 @@ ts.FunctionDeclaration
   );
 
   // 3.如果有return或者throw ,则在这之前插入结束点
-  node.body.statements.forEach(statement => {
-    newStatements.push(statement);
-    if (ts.isReturnStatement(statement) || ts.isThrowStatement(statement)) {
-      newStatements.splice(newStatements.length - 1, 0,
-        ts.factory.createExpressionStatement(
-          ts.factory.createCallExpression(
-            ts.factory.createIdentifier('ApmMethodMonitor.o'),
-            undefined,
-            [ts.factory.createStringLiteral(methodId)]
-            // createNumericLiteral
+  if (node.body && ts.isBlock(node.body)) {
+    node.body.statements.forEach(statement => {
+      newStatements.push(statement);
+      if (ts.isReturnStatement(statement) || ts.isThrowStatement(statement)) {
+        newStatements.splice(newStatements.length - 1, 0,
+          ts.factory.createExpressionStatement(
+            ts.factory.createCallExpression(
+              ts.factory.createIdentifier('ApmMethodMonitor.o'),
+              undefined,
+              [ts.factory.createStringLiteral(methodId)]
+              // createNumericLiteral
+            )
           )
-        )
-      );
-    }
-  });
+        );
+      }
+    });
+  }
 
   // 4.没有return或者throw ,则在方法最后插入结束点
   if (!newStatements.some(stmt => ts.isReturnStatement(stmt) || ts.isThrowStatement(stmt))) {
@@ -87,6 +88,17 @@ ts.FunctionDeclaration
       ts.factory.createExpressionStatement(
         ts.factory.createCallExpression(
           ts.factory.createIdentifier('ApmMethodMonitor.i'),
+          undefined,
+          [ts.factory.createStringLiteral(methodId)]
+        )
+      )
+    );
+  }  else {
+    // 处理非 Block 的情况
+    newStatements.push(
+      ts.factory.createExpressionStatement(
+        ts.factory.createCallExpression(
+          ts.factory.createIdentifier('ApmMethodMonitor.o'),
           undefined,
           [ts.factory.createStringLiteral(methodId)]
         )
@@ -104,9 +116,8 @@ ts.FunctionDeclaration
  * 函数声明类型
  * function xxx() {}
  */
-export function generateFunctionDeclarationCode(node: ts.FunctionDeclaration,
-  filePath: string): ts.FunctionDeclaration {
-  const newStatements = generateUpdatedStatements(node, filePath);
+export function generateFunctionDeclarationCode(node: ts.FunctionDeclaration): ts.FunctionDeclaration {
+  const newStatements = generateUpdatedStatements(node);
   return ts.factory.updateFunctionDeclaration(
     node,
     node.modifiers,
@@ -123,8 +134,8 @@ export function generateFunctionDeclarationCode(node: ts.FunctionDeclaration,
  * 函数表达式类型
  * let fa = function xxx() {}
  */
-export function generateFunctionExpressionCode(node: ts.FunctionExpression, filePath: string): ts.FunctionExpression {
-  const newStatements = generateUpdatedStatements(node, filePath);
+export function generateFunctionExpressionCode(node: ts.FunctionExpression): ts.FunctionExpression {
+  const newStatements = generateUpdatedStatements(node);
   return ts.factory.updateFunctionExpression(
     node,
     node.modifiers,
@@ -143,8 +154,8 @@ export function generateFunctionExpressionCode(node: ts.FunctionExpression, file
  *    a():void {}
  *  }
  */
-export function generateMethodDeclarationCode(node: ts.MethodDeclaration, filePath: string): ts.MethodDeclaration {
-  const newStatements = generateUpdatedStatements(node, filePath);
+export function generateMethodDeclarationCode(node: ts.MethodDeclaration): ts.MethodDeclaration {
+  const newStatements = generateUpdatedStatements(node);
   return ts.factory.updateMethodDeclaration(
     node,
     node.modifiers,
@@ -164,9 +175,8 @@ export function generateMethodDeclarationCode(node: ts.MethodDeclaration, filePa
  *    static b():void {}
  *  }
  */
-export function generateGetAccessorDeclarationCode(node: ts.GetAccessorDeclaration,
-  filePath: string): ts.GetAccessorDeclaration {
-  const newStatements = generateUpdatedStatements(node, filePath);
+export function generateGetAccessorDeclarationCode(node: ts.GetAccessorDeclaration): ts.GetAccessorDeclaration {
+  const newStatements = generateUpdatedStatements(node);
   return ts.factory.updateGetAccessorDeclaration(
     node,
     node.modifiers,
@@ -181,8 +191,8 @@ export function generateGetAccessorDeclarationCode(node: ts.GetAccessorDeclarati
  * 箭头函数类型
  * const xxx = () => {}
  */
-export function generateArrowFunctionCode(node: ts.ArrowFunction, filePath: string): ts.ArrowFunction {
-  const newStatements = generateUpdatedStatements(node, filePath);
+export function generateArrowFunctionCode(node: ts.ArrowFunction): ts.ArrowFunction {
+  const newStatements = generateUpdatedStatements(node);
   return ts.factory.updateArrowFunction(
     node,
     node.modifiers,

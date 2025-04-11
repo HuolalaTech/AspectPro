@@ -16,11 +16,13 @@ const importName = 'ApmMethodMonitor'
 const importPath = '@huolala/aspectpro/src/main/com/wp/slowMethod/ApmMethodMonitor'
 let shouldImport = false;
 
-export function startSlowMethodTransformer(tsSourceFile: ts.SourceFile, filePath: string) {
-  const transformedSourceFile = applyTransform(tsSourceFile, updateMethodVisitor, filePath);
-  const finalSourceFile = updateImportVisitor(transformedSourceFile);
-  resetShouldImport();
-  return finalSourceFile;
+export function startSlowMethodTransformer(ts, tsSourceFile: ts.SourceFile) {
+  console.log("1.startSlowMethodTransformer ....")
+  const transformedSourceFile = applyTransform(ts, tsSourceFile, updateMethodVisitor);
+  // const finalSourceFile = updateImportVisitor(ts, transformedSourceFile);
+  // resetShouldImport();
+  // return finalSourceFile;
+  return tsSourceFile;
 }
 
 export function setShouldImport() {
@@ -30,27 +32,33 @@ export function setShouldImport() {
   shouldImport = true
 }
 
-function updateMethodVisitor(context: ts.TransformationContext, filePath: string): ts.Visitor {
+function updateMethodVisitor(ts, context: ts.TransformationContext): ts.Visitor {
   return function visit(node: ts.Node): ts.VisitResult<ts.Node> {
     if (!supportsFunctions(node)) {
       return ts.visitEachChild(node, (childNode) => visit(childNode), context);
     }
-    if (node.body && isMethodSimpleOrEmpty(node.body.statements)) {
-      return ts.visitEachChild(node, (childNode) => visit(childNode), context);
+
+    const functionNode = node as ts.FunctionLikeDeclarationBase;
+    if (functionNode.body && ts.isBlock(functionNode.body)) {
+      const blockBody = functionNode.body as ts.Block;
+      if (isMethodSimpleOrEmpty(blockBody.statements)) {
+        return ts.visitEachChild(node, (childNode) => visit(childNode), context);
+      }
     }
+
     // 递归Node-支持函数嵌套
     let recursionNode: ts.Node;
 
     if (ts.isFunctionDeclaration(node)) {
-      recursionNode = generateFunctionDeclarationCode(node, filePath);
-    } else if (ts.isFunctionExpression(node)) {
-      recursionNode = generateFunctionExpressionCode(node, filePath);
+      recursionNode = generateFunctionDeclarationCode(node as ts.FunctionDeclaration);
+    } else if (ts.isFunctionExpression(node )) {
+      recursionNode = generateFunctionExpressionCode(node as ts.FunctionExpression);
     } else if (ts.isMethodDeclaration(node)) {
-      recursionNode = generateMethodDeclarationCode(node, filePath);
+      recursionNode = generateMethodDeclarationCode(node as ts.MethodDeclaration);
     } else if (ts.isGetAccessorDeclaration(node)) {
-      recursionNode = generateGetAccessorDeclarationCode(node, filePath);
+      recursionNode = generateGetAccessorDeclarationCode(node as ts.GetAccessorDeclaration);
     } else if (ts.isArrowFunction(node)) {
-      recursionNode = generateArrowFunctionCode(node, filePath);
+      recursionNode = generateArrowFunctionCode(node as ts.ArrowFunction);
     } else {
       return ts.visitEachChild(node, (childNode) => visit(childNode), context);
     }
@@ -59,9 +67,9 @@ function updateMethodVisitor(context: ts.TransformationContext, filePath: string
   };
 }
 
-function updateImportVisitor(sourceFile: ts.SourceFile): ts.SourceFile {
+function updateImportVisitor(ts, sourceFile: ts.SourceFile): ts.SourceFile {
   if (shouldImport) {
-    sourceFile = insertImportStatement(sourceFile, importName, importPath);
+    sourceFile = insertImportStatement(ts, sourceFile, importName, importPath);
   }
   return sourceFile;
 }

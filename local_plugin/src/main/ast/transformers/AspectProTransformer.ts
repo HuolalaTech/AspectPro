@@ -8,19 +8,19 @@ import { applyTransform } from '../apis/TransformerApis';
  * 替换函数调用
  * like: let a = a.x  ->  let a = b.y()
  */
-export function replaceCallExpression(tsSourceFile: ts.SourceFile, filePath: string, replaceRules: ReplaceRule[]) {
-  let transformedSourceFile = applyTransform(tsSourceFile, replaceCallExpressionVisitor, filePath, replaceRules);
+export function replaceCallExpression(ts, tsSourceFile: ts.SourceFile, replaceRules: ReplaceRule[]) {
+  let transformedSourceFile = applyTransform(ts, tsSourceFile, replaceCallExpressionVisitor, replaceRules);
 
   fileImports.forEach(importStatement => {
     const [importName, importPath] = importStatement.split(':');
-    transformedSourceFile = insertImportStatement(transformedSourceFile, importName, importPath);
+    transformedSourceFile = insertImportStatement(ts, transformedSourceFile, importName, importPath);
   });
   return transformedSourceFile;
 }
 
 const fileImports: Set<string> = new Set<string>();
 
-function replaceCallExpressionVisitor(context: ts.TransformationContext, filePath: string,
+function replaceCallExpressionVisitor(context: ts.TransformationContext,
   replaceRules: ReplaceRule[]): ts.Visitor {
 
   return function visit(node: ts.Node): ts.VisitResult<ts.Node> {

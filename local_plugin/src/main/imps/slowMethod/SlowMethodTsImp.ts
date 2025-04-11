@@ -10,7 +10,7 @@ export class SlowMethodTsImp extends BasePluginImp {
   protected isSupportFile(filePath: string): boolean {
     return VALID_FILE_REGEX.test(filePath);
   }
-  protected pluginImp(tsSourceFile: ts.SourceFile, filePath: string, ...args: any[]): ts.SourceFile {
-    return startSlowMethodTransformer(tsSourceFile, filePath);
+  protected pluginImp(ts, sourceFile: ts.SourceFile,  ...args: any[]): ts.SourceFile {
+    return startSlowMethodTransformer(ts, sourceFile);
   }
 }

@@ -35,6 +35,7 @@ export function writeFile(filePath: string, data: string): void {
 
 export function readConfigFile(rootDir: string, configFilePath: string): Config {
   configFilePath = path.join(rootDir, configFilePath)
+  console.log("readConfigFile() configFilePath:" + configFilePath)
   const filesToProcess: string[] = [];
   const keepFiles: string[] = [];
   const replaceRules: ReplaceRule[] = [];
