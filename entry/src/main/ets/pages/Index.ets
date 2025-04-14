@@ -3,6 +3,7 @@ import { Logger } from '@huolala/logger';
 import { TestHttpClient } from '../test/TestHttpClient';
 import { TAG } from '../MyHookManager';
 import { router } from '@kit.ArkUI';
+import { TestClass2 } from '../test/TestClass2';
 
 @Entry
 @Component
@@ -47,8 +48,8 @@ struct Index {
       .onClick(() => {
         TestClass1.a(() => {
         })
-        new TestClass1().b("invoke method b", false)
-        new TestClass1().c("invoke method c")
+        // new TestClass1().b("invoke method b", false)
+        // new TestClass1().c("invoke method c")
       })
 
       Button() {
@@ -62,6 +63,7 @@ struct Index {
       .width('80%')
       .height('6%')
       .onClick(() => {
+        TestClass2.functionDeclarationExample();
         router.pushUrl({ url: "pages/Second" });
       })
 

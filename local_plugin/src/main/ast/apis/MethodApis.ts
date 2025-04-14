@@ -1,3 +1,4 @@
+/*
 //@ts-ignore
 import * as ts from 'typescript';
 import { generateMethodID } from '../../utils/MethodIdUtil';
@@ -32,6 +33,7 @@ export function isMethodSimpleOrEmpty(statements: ts.NodeArray<ts.Statement>): b
   return false;
 }
 
+*/
 /**
  * 生成插入后 newStatements -> 进一步生成 node.body -> 实现代码插桩
  * 比如:
@@ -41,7 +43,8 @@ export function isMethodSimpleOrEmpty(statements: ts.NodeArray<ts.Statement>): b
  *                            let a = 1
  *                            A.o(methodId);
  *                           }
- */
+ *//*
+
 export function generateUpdatedStatements(node:
 ts.FunctionDeclaration
   | ts.FunctionExpression
@@ -87,7 +90,7 @@ ts.FunctionDeclaration
     newStatements.push(
       ts.factory.createExpressionStatement(
         ts.factory.createCallExpression(
-          ts.factory.createIdentifier('ApmMethodMonitor.i'),
+          ts.factory.createIdentifier('ApmMethodMonitor.o'),
           undefined,
           [ts.factory.createStringLiteral(methodId)]
         )
@@ -112,10 +115,12 @@ ts.FunctionDeclaration
   return newStatements;
 }
 
+*/
 /**
  * 函数声明类型
  * function xxx() {}
- */
+ *//*
+
 export function generateFunctionDeclarationCode(node: ts.FunctionDeclaration): ts.FunctionDeclaration {
   const newStatements = generateUpdatedStatements(node);
   return ts.factory.updateFunctionDeclaration(
@@ -130,10 +135,12 @@ export function generateFunctionDeclarationCode(node: ts.FunctionDeclaration): t
   );
 }
 
+*/
 /**
  * 函数表达式类型
  * let fa = function xxx() {}
- */
+ *//*
+
 export function generateFunctionExpressionCode(node: ts.FunctionExpression): ts.FunctionExpression {
   const newStatements = generateUpdatedStatements(node);
   return ts.factory.updateFunctionExpression(
@@ -148,12 +155,14 @@ export function generateFunctionExpressionCode(node: ts.FunctionExpression): ts.
   );
 }
 
+*/
 /**
  * 方法声明类型
  * class A {
  *    a():void {}
  *  }
- */
+ *//*
+
 export function generateMethodDeclarationCode(node: ts.MethodDeclaration): ts.MethodDeclaration {
   const newStatements = generateUpdatedStatements(node);
   return ts.factory.updateMethodDeclaration(
@@ -169,12 +178,14 @@ export function generateMethodDeclarationCode(node: ts.MethodDeclaration): ts.Me
   );
 }
 
+*/
 /**
  * 静态方法声明类型
  * class A {
  *    static b():void {}
  *  }
- */
+ *//*
+
 export function generateGetAccessorDeclarationCode(node: ts.GetAccessorDeclaration): ts.GetAccessorDeclaration {
   const newStatements = generateUpdatedStatements(node);
   return ts.factory.updateGetAccessorDeclaration(
@@ -187,10 +198,12 @@ export function generateGetAccessorDeclarationCode(node: ts.GetAccessorDeclarati
   );
 }
 
+*/
 /**
  * 箭头函数类型
  * const xxx = () => {}
- */
+ *//*
+
 export function generateArrowFunctionCode(node: ts.ArrowFunction): ts.ArrowFunction {
   const newStatements = generateUpdatedStatements(node);
   return ts.factory.updateArrowFunction(
@@ -204,9 +217,11 @@ export function generateArrowFunctionCode(node: ts.ArrowFunction): ts.ArrowFunct
   );
 }
 
+*/
 /**
  * 收集单个文件所有的方法
- */
+ *//*
+
 function collectMethods(node: ts.Node, methods: ts.FunctionLikeDeclaration[] = []): ts.FunctionLikeDeclaration[] {
   if (ts.isMethodDeclaration(node) || ts.isFunctionDeclaration(node)
     || ts.isFunctionExpression(node) || ts.isArrowFunction(node)) {
@@ -216,4 +231,4 @@ function collectMethods(node: ts.Node, methods: ts.FunctionLikeDeclaration[] = [
     collectMethods(child, methods);
   });
   return methods;
-}
+}*/

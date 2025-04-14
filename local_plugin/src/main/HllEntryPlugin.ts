@@ -72,12 +72,12 @@ function dispatcherToPlugins(node) {
   // let allAspectProConfig: { allFiles: string[]; replaceRules: ReplaceRule[]; } =
   //   PluginConfigManager.parseAspectProConfig(node.nodeDir.filePath, '../local_plugin/src/main/configs/txt/aspectProPluginConfig.txt');
   // backupOriginalFiles(allAspectProConfig.allFiles)
-  // AspectProPlugin.start(ts, allAspectProConfig.allFiles, allAspectProConfig.replaceRules)
+  // AspectProPlugin.start(allAspectProConfig.allFiles, allAspectProConfig.replaceRules)
 
   let allSlowMethodFiles: string[] =
     PluginConfigManager.parseSlowMethodConfig(node.nodeDir.filePath, '../local_plugin/src/main/configs/txt/slowMethodBlacklist.txt');
   backupOriginalFiles(allSlowMethodFiles)
-  SlowMethodPlugin.start(ts, allSlowMethodFiles)
+  SlowMethodPlugin.start(allSlowMethodFiles)
   console.warn(TAG, '------------ dispatcherToPlugins end -----------------');
 }
 

@@ -1,3 +1,4 @@
+/*
 //@ts-ignore
 import * as ts from 'typescript';
 import { getSourceFile, printSourceFile } from '../ast/apis/TransformerApis';
@@ -7,13 +8,13 @@ const TAG:string = "BasePluginImp";
 
 export abstract class BasePluginImp {
 
-  public doTransform(ts, sourcefile: ts.SourceFile):  ts.SourceFile {
-    return this.pluginImp(ts, sourcefile)
+  public doTransform(sourcefile: ts.SourceFile):  ts.SourceFile {
+    return this.pluginImp(sourcefile)
   }
 
-  public start(ts, originFile: string, ...args: any[]): void {
+  public start(originFile: string, ...args: any[]): void {
     if (this.isSupportFile(originFile)) {
-      this.processFile(ts, originFile, ...args);
+      this.processFile(originFile, ...args);
     } else {
       console.debug(TAG, `not support this File  ${originFile} , just return`);
       return
@@ -21,17 +22,17 @@ export abstract class BasePluginImp {
   }
 
   protected abstract isSupportFile(filePath: string): boolean;
-  protected abstract pluginImp(ts, tsSourceFile: ts.SourceFile, ...args: any[]): ts.SourceFile;
+  protected abstract pluginImp(tsSourceFile: ts.SourceFile, ...args: any[]): ts.SourceFile;
 
-  protected processFile(ts, filePath: string, ...args: any[]): void {
+  protected processFile(filePath: string, ...args: any[]): void {
     try {
-      const tsSourceFile = getSourceFile(ts, filePath);
-      const afterPluginsSourceFile: ts.SourceFile = this.pluginImp(ts, tsSourceFile, filePath, ...args);
-      let finalContent = printSourceFile(ts, afterPluginsSourceFile)
+      const tsSourceFile = getSourceFile(filePath);
+      const afterPluginsSourceFile: ts.SourceFile = this.pluginImp(tsSourceFile, filePath, ...args);
+      let finalContent = printSourceFile(afterPluginsSourceFile)
       // console.warn(TAG, "5.processOriginFile to sourceFile by TS CompilerAPI content:\n" + finalContent)
       writeFile(filePath, finalContent);
     } catch (error) {
       console.error(TAG, `Failed to process file ${filePath},`, error);
     }
   }
-}
+}*/

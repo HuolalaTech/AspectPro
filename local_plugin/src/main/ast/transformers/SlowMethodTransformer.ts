@@ -1,3 +1,4 @@
+/*
 //@ts-ignore
 import * as ts from 'typescript';
 import { insertImportStatement } from '../apis/ImportApis';
@@ -16,13 +17,12 @@ const importName = 'ApmMethodMonitor'
 const importPath = '@huolala/aspectpro/src/main/com/wp/slowMethod/ApmMethodMonitor'
 let shouldImport = false;
 
-export function startSlowMethodTransformer(ts, tsSourceFile: ts.SourceFile) {
+export function startSlowMethodTransformer(tsSourceFile: ts.SourceFile) {
   console.log("1.startSlowMethodTransformer ....")
-  const transformedSourceFile = applyTransform(ts, tsSourceFile, updateMethodVisitor);
-  // const finalSourceFile = updateImportVisitor(ts, transformedSourceFile);
-  // resetShouldImport();
-  // return finalSourceFile;
-  return tsSourceFile;
+  const transformedSourceFile = applyTransform(tsSourceFile, updateMethodVisitor);
+  const finalSourceFile = updateImportVisitor(transformedSourceFile);
+  resetShouldImport();
+  return finalSourceFile;
 }
 
 export function setShouldImport() {
@@ -32,7 +32,7 @@ export function setShouldImport() {
   shouldImport = true
 }
 
-function updateMethodVisitor(ts, context: ts.TransformationContext): ts.Visitor {
+function updateMethodVisitor(context: ts.TransformationContext): ts.Visitor {
   return function visit(node: ts.Node): ts.VisitResult<ts.Node> {
     if (!supportsFunctions(node)) {
       return ts.visitEachChild(node, (childNode) => visit(childNode), context);
@@ -67,9 +67,9 @@ function updateMethodVisitor(ts, context: ts.TransformationContext): ts.Visitor 
   };
 }
 
-function updateImportVisitor(ts, sourceFile: ts.SourceFile): ts.SourceFile {
+function updateImportVisitor(sourceFile: ts.SourceFile): ts.SourceFile {
   if (shouldImport) {
-    sourceFile = insertImportStatement(ts, sourceFile, importName, importPath);
+    sourceFile = insertImportStatement(sourceFile, importName, importPath);
   }
   return sourceFile;
 }
@@ -77,3 +77,4 @@ function updateImportVisitor(ts, sourceFile: ts.SourceFile): ts.SourceFile {
 function resetShouldImport() {
   shouldImport = false
 }
+*/

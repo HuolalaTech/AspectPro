@@ -1,17 +1,20 @@
+/*
 //@ts-ignore
 import * as ts from 'typescript';
 
+*/
 /**
  *
  * @param sourceFile  xxx.ts|ets
  * @param importName  'ApmMethodMonitor'
  * @param importPath  '@huolala/aspectpro/src/main/com/wp/slowMethod/ApmMethodMonitor'
  * @returns
- */
-export function insertImportStatement(ts, sourceFile: ts.SourceFile, importName: string,
+ *//*
+
+export function insertImportStatement(sourceFile: ts.SourceFile, importName: string,
   importPath: string): ts.SourceFile {
 
-  if (isImportExist(ts, sourceFile, importPath, importName)) {
+  if (isImportExist(sourceFile, importPath, importName)) {
     return sourceFile;
   }
 
@@ -34,7 +37,7 @@ export function insertImportStatement(ts, sourceFile: ts.SourceFile, importName:
   return ts.factory.updateSourceFile(sourceFile, newStatements);
 }
 
-function isImportExist(ts, sourceFile: ts.SourceFile, importPath: string, importName: string) {
+function isImportExist(sourceFile: ts.SourceFile, importPath: string, importName: string) {
   return sourceFile.statements.some((statement: ts.Statement) => {
     if (ts.isImportDeclaration(statement)) {
       const importDeclaration = statement as ts.ImportDeclaration;
@@ -52,3 +55,4 @@ function isImportExist(ts, sourceFile: ts.SourceFile, importPath: string, import
     return false;
   });
 }
+*/

@@ -8,10 +8,18 @@ import { hapTasks } from '@ohos/hvigor-ohos-plugin';
 //   plugins: [aspectProPlugin()]
 // }
 
+
+// import { HllEntryPlugin } from '../local_plugin/src/main/HllEntryPlugin';
+//
+// export default {
+//   system: hapTasks,
+//   plugins: [HllEntryPlugin()]
+// }
+
 // TODO 开发阶段 - 依赖local plugin
-import { HllEntryPlugin } from '../local_plugin/src/main/HllEntryPlugin';
+import { HllHvigorPlugin } from '../local_plugin/src/main/HllHvigorPlugin';
 
 export default {
   system: hapTasks,
-  plugins: [HllEntryPlugin()]
+  plugins: [HllHvigorPlugin('../local_plugin/src/main/imps/HllHvigorCompilePlugin.ts')]
 }

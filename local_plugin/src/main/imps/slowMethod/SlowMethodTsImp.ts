@@ -1,3 +1,4 @@
+/*
 import { startSlowMethodTransformer } from '../../ast/transformers/SlowMethodTransformer';
 import { BasePluginImp } from '../BasePluginImp';
 //@ts-ignore
@@ -10,7 +11,7 @@ export class SlowMethodTsImp extends BasePluginImp {
   protected isSupportFile(filePath: string): boolean {
     return VALID_FILE_REGEX.test(filePath);
   }
-  protected pluginImp(ts, sourceFile: ts.SourceFile,  ...args: any[]): ts.SourceFile {
-    return startSlowMethodTransformer(ts, sourceFile);
+  protected pluginImp(sourceFile: ts.SourceFile,  ...args: any[]): ts.SourceFile {
+    return startSlowMethodTransformer(sourceFile);
   }
-}
+}*/

@@ -1,19 +1,22 @@
+/*
 //@ts-ignore
 import * as ts from 'typescript';
 import { ReplaceRule } from '../../configs/parsers/BaseConfigParser';
 import { insertImportStatement } from '../apis/ImportApis';
 import { applyTransform } from '../apis/TransformerApis';
 
+*/
 /**
  * 替换函数调用
  * like: let a = a.x  ->  let a = b.y()
- */
-export function replaceCallExpression(ts, tsSourceFile: ts.SourceFile, replaceRules: ReplaceRule[]) {
-  let transformedSourceFile = applyTransform(ts, tsSourceFile, replaceCallExpressionVisitor, replaceRules);
+ *//*
+
+export function replaceCallExpression(tsSourceFile: ts.SourceFile, replaceRules: ReplaceRule[]) {
+  let transformedSourceFile = applyTransform(tsSourceFile, replaceCallExpressionVisitor, replaceRules);
 
   fileImports.forEach(importStatement => {
     const [importName, importPath] = importStatement.split(':');
-    transformedSourceFile = insertImportStatement(ts, transformedSourceFile, importName, importPath);
+    transformedSourceFile = insertImportStatement(transformedSourceFile, importName, importPath);
   });
   return transformedSourceFile;
 }
@@ -69,3 +72,4 @@ function replaceCallExpressionVisitor(context: ts.TransformationContext,
     return ts.visitEachChild(node, visit, context);
   };
 }
+*/
