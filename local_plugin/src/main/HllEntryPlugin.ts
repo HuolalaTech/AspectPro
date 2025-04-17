@@ -25,7 +25,7 @@ import os from 'os';
 import * as ts from 'typescript';
 
 import { PluginConfigManager } from './configs/PluginConfigManager';
-import { AspectProPlugin } from './imps/aspectPro/AspectProPlugin';
+// import { AspectProPlugin } from './imps/aspectPro/AspectProPlugin';
 import { SlowMethodPlugin } from './imps/slowMethod/SlowMethodPlugin';
 import { ReplaceRule } from './configs/parsers/BaseConfigParser';
 
@@ -74,10 +74,10 @@ function dispatcherToPlugins(node) {
   // backupOriginalFiles(allAspectProConfig.allFiles)
   // AspectProPlugin.start(allAspectProConfig.allFiles, allAspectProConfig.replaceRules)
 
-  let allSlowMethodFiles: string[] =
-    PluginConfigManager.parseSlowMethodConfig(node.nodeDir.filePath, '../local_plugin/src/main/configs/txt/slowMethodBlacklist.txt');
-  backupOriginalFiles(allSlowMethodFiles)
-  SlowMethodPlugin.start(allSlowMethodFiles)
+  // let allSlowMethodFiles: string[] =
+  //   PluginConfigManager.parseSlowMethodConfig(node.nodeDir.filePath, '../local_plugin/src/main/configs/txt/slowMethodBlacklist.txt');
+  // backupOriginalFiles(allSlowMethodFiles)
+  // SlowMethodPlugin.start(allSlowMethodFiles)
   console.warn(TAG, '------------ dispatcherToPlugins end -----------------');
 }
 

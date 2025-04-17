@@ -17,9 +17,8 @@ function doTransform() {
        */
       let allSlowMethodFiles: string[] =
         PluginConfigManager.parseSlowMethodConfig(this.share.projectConfig.modulePath, '../local_plugin/src/main/configs/txt/slowMethodBlacklist.txt');
-      console.log("beforeBuildEnd() ----> allSlowMethodFiles: " + allSlowMethodFiles.length);
+      // console.log("beforeBuildEnd() ----> allSlowMethodFiles: " + allSlowMethodFiles.length);
       if (allSlowMethodFiles.length <= 0) {
-        console.error("doTransform() ----> allSlowMethodFiles: " + allSlowMethodFiles.length);
         return;
       }
 
@@ -30,7 +29,7 @@ function doTransform() {
       const sourceFiles = this.share.getSourceFiles();
       // console.log("beforeBuildEnd() ----> this.share 类型: " + typeof this.share);
       // console.dir(this.share);
-      console.log("beforeBuildEnd() ----> sourceFiles 长度: " +  sourceFiles.length);
+      // console.log("beforeBuildEnd() ----> sourceFiles 长度: " +  sourceFiles.length);
       // console.dir(sourceFiles);
       // 遍历所有的sourceFile
       sourceFiles.forEach((ModuleSourceFile) => {

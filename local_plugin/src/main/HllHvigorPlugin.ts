@@ -4,16 +4,17 @@
  * 方案: 直接Hvigor plugin 中获取ets_loader 编译工具中this.share 对象，进而获取到 Ets转换后的 ts.sourcefile
  *
  *  工作流程
- * - step 1: 定义Hvigor Plugin -> HllEntryPluginV2
- * - step 2: HllEntryPluginV2中通过OhosHapContext.loadCompilePlugin( AopPlugins)
- * - step 3: AopPlugins中在beforeBuildEnd 函数中获取到ets_loader中的ts对象，并执行 Aop操作 最后设置修改后的sourcefile
+ * - step 1: 定义你的Hvigor Plugin -> 比如HllEntryPlugin
+ * - step 2: HllEntryPlugin中通过OhosHapContext.loadCompilePlugin( AopPlugins)
+ * - step 3: 在AopPlugins中获取到ets转化为ts的 sourcefile
+ * - step 4: 获取ets_loader中的ts对象，按你的aop需求 利用ts compiler aip 修改sourcefile
+ * - step 5: 将修改后的sourcefile赋值给this.share.sourcefile, 系统编译工具执行编译生成产物
  */
 
 //@ts-ignore
 import { hvigor, HvigorNode, HvigorPlugin } from '@ohos/hvigor';
 //@ts-ignore
 import { OhosHapContext, OhosPluginId} from '@ohos/hvigor-ohos-plugin';
-import { PluginConfigManager } from './configs/PluginConfigManager';
 
 /**
  *

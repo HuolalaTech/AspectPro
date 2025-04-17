@@ -6,7 +6,7 @@
 -hook ./src/main/ets/test/TestClass1.ts
 #-hook ./src/main/ets/test/TestClass2.ets
 #-hook ./src/main/ets/pages/Index.ets
-#-hook ./src/main/ets/entryability/EntryAbility.ets
+-hook ./src/main/ets/entryability/EntryAbility.ets
 #-hook ../local_plugin/src/main/test/TestTs.ts
 
 # 支持三方库代码替换

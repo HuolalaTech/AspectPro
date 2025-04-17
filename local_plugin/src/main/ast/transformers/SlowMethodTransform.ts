@@ -1,97 +1,163 @@
-//@ts-ignore
-// import * as ts from 'typescript';
+import { ImportTransformApi } from '../apis/ImportTransformApi';
+import { MethodTransformApi } from '../apis/MethodTransformApi';
+import { getNodeKindName } from '../apis/TransformApiUtil';
 
-function getNodeKindName(ts, kind) {
-  for (let key in ts.SyntaxKind) {
-    if (ts.SyntaxKind[key] === kind) {
-      return key;
-    }
-  }
-  return null;
-}
+const insertStartMethodName = 'Logger.w';
+const insertEndMethodName = 'Logger.w';
+const insertLogTag = 'SlowMethod';
+const importName = 'Logger'
+const importPath = '@package:pkg_modules/.ohpm/@huolala+logger@1.0.0/pkg_modules/@huolala/logger/src/main/com.wp/Logger'
 
+/**
+ * AOP插入代码统计方法执行耗时
+ * step 一:
+ *  函数开头插入 const startTime = Date.now();
+ * step 二:
+ *  函数结束插入 Logger.w(tag, `${methodId} took ${(Date.now() - startTime)} ms`)
+ */
 export class SlowMethodTransform {
   static doTransform(ts) {
     return (context) => {
-      const visit = (node) => {
+      return (sourceFile) => {
+        const visit = (node) => {
+          if (!MethodTransformApi.supportsFunctions(node, ts)) {
+            return ts.visitEachChild(node, visit, context);
+          }
 
-        // const nodeKindName = getNodeKindName(ts, node.kind);
-        // console.log(`Visiting node: ${nodeKindName} (kind: ${node.kind}) - Content: ${node.getText()}`);
+          if (MethodTransformApi.isSimpleOrEmptyMethod(node, ts)) {
+            console.log(`simple method Visiting (kind: ${node.kind}) - Content: ${node.getText()}`);
+            return ts.visitEachChild(node, visit, context);
+          }
 
-        if (!this.supportsFunctions(node, ts)) {
-          // console.debug("1. not support node:")
-          return ts.visitEachChild(node, visit, context);
-        }
-        // console.debug("1. support node")
-        let updatedNode = this.generateUpdatedNode(node, ts);
-        return ts.visitEachChild(updatedNode, visit, context);
+          let updatedNode = this.generateUpdatedMethod(node, ts, sourceFile);
+          return ts.visitEachChild(updatedNode, visit, context);
+        };
+
+        let updatedSourceFile = ts.visitNode(sourceFile, visit);
+        return ImportTransformApi.addImportStatement(updatedSourceFile, ts, importName, importPath);
       };
-      return (node) => ts.visitNode(node, visit);
     };
   }
 
-  static supportsFunctions(node, ts) {
-    const functionKinds = [
-      ts.SyntaxKind.FunctionDeclaration,
-      ts.SyntaxKind.MethodDeclaration,
-      ts.SyntaxKind.FunctionExpression,
-      ts.SyntaxKind.ArrowFunction,
-      ts.SyntaxKind.GetAccessor,
-      ts.SyntaxKind.SetAccessor
-    ];
-    return functionKinds.includes(node.kind);
+  static generateUpdatedMethod(node, ts, sourceFile) {
+    // const nodeKindName = getNodeKindName(ts, node.kind);
+    //console.log(`Visiting node: ${nodeKindName} (kind: ${node.kind}) - Content: ${node.getText()}`);
+
+    const generateMethodAopStatements = (node) => {
+      if (MethodTransformApi.supportsFunctions(node, ts)) {
+        return this.doUpdateMethod(node, ts, sourceFile);
+      } else if (ts.isPropertyAssignment(node)) {
+        if (ts.isFunctionExpression(node.initializer) || ts.isArrowFunction(node.initializer)) {
+          return this.doUpdateMethod(node, ts, sourceFile);
+        }
+      }
+      return undefined;
+    }
+
+    const newMethodStatements = generateMethodAopStatements(node);
+
+    const transformers = {
+      [ts.SyntaxKind.FunctionDeclaration]: MethodTransformApi.generateFunctionDeclarationCode,
+      [ts.SyntaxKind.FunctionExpression]: MethodTransformApi.generateFunctionExpressionCode,
+      [ts.SyntaxKind.MethodDeclaration]: MethodTransformApi.generateMethodDeclarationCode,
+      [ts.SyntaxKind.ArrowFunction]: MethodTransformApi.generateArrowFunctionCode,
+      [ts.SyntaxKind.PropertyAssignment]: MethodTransformApi.generatePropertyAssignmentCode,
+    };
+
+    const transformFunction = transformers[node.kind];
+    if (transformFunction) {
+      if (node.kind === ts.SyntaxKind.PropertyAssignment && newMethodStatements === undefined) {
+        return node;
+      }
+      return transformFunction(node, ts, newMethodStatements);
+    }
+
+    return node;
   }
 
-  static generateUpdatedStatements(node, ts) {
+  static doUpdateMethod(node, ts, sourceFile) {
     const newStatements: Array<typeof ts.Statement> = [];
+    // 1.插入方法开始执行时间
+    const startTimeVar = 'startTime';
+    const methodId = MethodTransformApi.generateMethodId(node, sourceFile, ts);
+    // 本示例中 仅统计函数执行耗时，入口函数可不插入，仅插入 const startTime = Date.now();
+    // const beforeLogStatement = insertStartMethod();
+    // newStatements.push(beforeLogStatement);
+    newStatements.push(insertTimeStamp(startTimeVar));
 
-    // 插入方法开始点
-    const beforeLogStatement = ts.factory.createExpressionStatement(
-      ts.factory.createCallExpression(
-        ts.factory.createIdentifier('console.log'),
-        undefined,
-        [ts.factory.createStringLiteral('Function start: ' + (node.name ? node.name.text : 'anonymous function'))]
-      )
-    );
-    newStatements.push(beforeLogStatement);
-
+    // 2.遍历插入方法结束耗时统计
     if (node.body && ts.isBlock(node.body)) {
-      node.body.statements.forEach(statement => {
-        if (ts.isReturnStatement(statement) || ts.isThrowStatement(statement)) {
-          // 在 return 或 throw 之前插入 end 日志
-          newStatements.push(
-            ts.factory.createExpressionStatement(
+      const updatedStatements = insertEndMethod(node.body.statements, ts, node, methodId, startTimeVar);
+      newStatements.push(...updatedStatements);
+    }
+
+    return newStatements;
+
+    function insertTimeStamp(variableName) {
+      return ts.factory.createVariableStatement(
+        undefined,
+        ts.factory.createVariableDeclarationList(
+          [
+            ts.factory.createVariableDeclaration(
+              ts.factory.createIdentifier(variableName),
+              undefined,
+              undefined,
               ts.factory.createCallExpression(
-                ts.factory.createIdentifier('console.log'),
+                ts.factory.createPropertyAccessExpression(
+                  ts.factory.createIdentifier("Date"),
+                  ts.factory.createIdentifier("now")
+                ),
                 undefined,
-                [ts.factory.createStringLiteral('Function end: ' + (node.name ? node.name.text : 'anonymous function'))]
+                []
               )
             )
+          ],
+          ts.NodeFlags.Const
+        )
+      );
+    }
+
+    function insertEndMethod(statements, ts, node, methodId, startTimeVar) {
+      const updatedStatements: Array<typeof ts.Statement> = [];
+      statements.forEach(statement => {
+        if (ts.isIfStatement(statement)) {
+          const thenBlock = ts.factory.updateBlock(
+            statement.thenStatement,
+            insertEndMethod(statement.thenStatement.statements, ts, node, methodId, startTimeVar)
           );
-          newStatements.push(statement);
+          const elseBlock = statement.elseStatement ? ts.factory.updateBlock(
+            statement.elseStatement,
+            insertEndMethod(statement.elseStatement.statements, ts, node, methodId, startTimeVar)
+          ) : undefined;
+          updatedStatements.push(
+            ts.factory.updateIfStatement(
+              statement,
+              statement.expression,
+              thenBlock,
+              elseBlock
+            )
+          );
+        } else if (ts.isReturnStatement(statement) || ts.isThrowStatement(statement)) {
+          updatedStatements.push(...createEndLogStatements(ts, methodId, startTimeVar));
+          updatedStatements.push(statement);
         } else if (ts.isTryStatement(statement)) {
-          // 针对 try 语句处理 catch 和 finally 块
           const tryBlock = ts.factory.updateBlock(
             statement.tryBlock,
-            this.addLogsToStatements(statement.tryBlock.statements, ts, node)
+            insertEndMethod(statement.tryBlock.statements, ts, node, methodId, startTimeVar)
           );
-
           const catchClause = statement.catchClause ? ts.factory.updateCatchClause(
             statement.catchClause,
             statement.catchClause.variableDeclaration,
             ts.factory.updateBlock(
               statement.catchClause.block,
-              this.addLogsToStatements(statement.catchClause.block.statements, ts, node)
+              insertEndMethod(statement.catchClause.block.statements, ts, node, methodId, startTimeVar)
             )
           ) : undefined;
-
           const finallyBlock = statement.finallyBlock ? ts.factory.updateBlock(
             statement.finallyBlock,
-            this.addLogsToStatements(statement.finallyBlock.statements, ts, node)
+            insertEndMethod(statement.finallyBlock.statements, ts, node, methodId, startTimeVar)
           ) : undefined;
-
-          // 更新 try 语句
-          newStatements.push(
+          updatedStatements.push(
             ts.factory.updateTryStatement(
               statement,
               tryBlock,
@@ -99,203 +165,68 @@ export class SlowMethodTransform {
               finallyBlock
             )
           );
-
+        } else if (ts.isBlock(statement)) {
+          updatedStatements.push(ts.factory.updateBlock(
+            statement,
+            insertEndMethod(statement.statements, ts, node, methodId, startTimeVar)
+          ));
         } else {
-          newStatements.push(statement);
+          updatedStatements.push(statement);
         }
       });
 
-      // 如果没有 return 或 throw 语句，在块末尾插入结束日志
-      if (!node.body.statements.some(s => ts.isReturnStatement(s) || ts.isThrowStatement(s))) {
-        newStatements.push(
-          ts.factory.createExpressionStatement(
-            ts.factory.createCallExpression(
-              ts.factory.createIdentifier('console.log'),
-              undefined,
-              [ts.factory.createStringLiteral('Function end: ' + (node.name ? node.name.text : 'anonymous function'))]
-            )
-          )
-        );
-      }
-    }
-
-    return newStatements;
-  }
-
-  static addLogsToStatements(statements, ts, node) {
-    const updatedStatements: Array<typeof ts.Statement> = [];
-
-    statements.forEach(statement => {
-      if (ts.isReturnStatement(statement) || ts.isThrowStatement(statement)) {
-        // 在 return 或 throw 之前添加日志
-        updatedStatements.push(
-          ts.factory.createExpressionStatement(
-            ts.factory.createCallExpression(
-              ts.factory.createIdentifier('console.log'),
-              undefined,
-              [ts.factory.createStringLiteral('Function end: ' + (node && node.name ? node.name.text : 'anonymous function'))]
-            )
-          )
-        );
+      if (!statements.some(s => ts.isReturnStatement(s) || ts.isThrowStatement(s))) {
+        updatedStatements.push(...createEndLogStatements(ts, methodId, startTimeVar));
       }
 
-      if (ts.isTryStatement(statement)) {
-        // 对嵌套的 try 块也进行处理
-        const tryBlock = ts.factory.updateBlock(
-          statement.tryBlock,
-          this.addLogsToStatements(statement.tryBlock.statements, ts, node)
-        );
-
-        const catchClause = statement.catchClause ? ts.factory.updateCatchClause(
-          statement.catchClause,
-          statement.catchClause.variableDeclaration,
-          ts.factory.updateBlock(
-            statement.catchClause.block,
-            this.addLogsToStatements(statement.catchClause.block.statements, ts, node)
-          )
-        ) : undefined;
-
-        const finallyBlock = statement.finallyBlock ? ts.factory.updateBlock(
-          statement.finallyBlock,
-          this.addLogsToStatements(statement.finallyBlock.statements, ts, node)
-        ) : undefined;
-
-        // 更新嵌套的 try 语句
-        updatedStatements.push(
-          ts.factory.updateTryStatement(
-            statement,
-            tryBlock,
-            catchClause,
-            finallyBlock
-          )
-        );
-      } else {
-        updatedStatements.push(statement);
-      }
-    });
-    return updatedStatements;
-  }
-
-  static generateFunctionDeclarationCode(node, ts) {
-    const newStatements = SlowMethodTransform.generateUpdatedStatements(node, ts);
-    return ts.factory.updateFunctionDeclaration(
-      node,
-      node.modifiers,
-      node.asteriskToken,
-      node.name,
-      node.typeParameters,
-      node.parameters,
-      node.type,
-      ts.factory.createBlock(newStatements, true)
-    );
-  }
-
-  static generateMethodDeclarationCode(node, ts) {
-    const newStatements = SlowMethodTransform.generateUpdatedStatements(node, ts);
-    return ts.factory.updateMethodDeclaration(
-      node,
-      node.decorators,
-      node.modifiers,
-      node.asteriskToken,
-      node.name,
-      node.questionToken,
-      node.typeParameters,
-      node.parameters,
-      node.type,
-      ts.factory.createBlock(newStatements, true)
-    );
-  }
-
-  static generateFunctionExpressionCode(node, ts) {
-    const newStatements = SlowMethodTransform.generateUpdatedStatements(node, ts);
-    return ts.factory.updateFunctionExpression(
-      node,
-      node.modifiers,
-      node.asteriskToken,
-      node.name,
-      node.typeParameters,
-      node.parameters,
-      node.type,
-      ts.factory.createBlock(newStatements, true)
-    );
-  }
-
-  static generateArrowFunctionCode(node, ts) {
-    const newStatements = SlowMethodTransform.generateUpdatedStatements(node, ts);
-    return ts.factory.updateArrowFunction(
-      node,
-      node.modifiers,
-      node.typeParameters,
-      node.parameters,
-      node.type,
-      node.equalsGreaterThanToken,
-      ts.factory.createBlock(newStatements, true)
-    );
-  }
-
-  static generateGetAccessorDeclarationCode(node, ts) {
-    const newStatements = SlowMethodTransform.generateUpdatedStatements(node, ts);
-    return ts.factory.updateGetAccessorDeclaration(
-      node,
-      node.decorators,
-      node.modifiers,
-      node.name,
-      node.parameters,
-      ts.factory.createBlock(newStatements, true)
-    );
-  }
-
-  static generateSetAccessorDeclarationCode(node, ts) {
-    const newStatements = SlowMethodTransform.generateUpdatedStatements(node, ts);
-    return ts.factory.updateSetAccessorDeclaration(
-      node,
-      node.decorators,
-      node.modifiers,
-      node.name,
-      node.parameters,
-      ts.factory.createBlock(newStatements, true)
-    );
-  }
-
-  static generatePropertyAssignmentCode(node, ts) {
-    if (ts.isFunctionExpression(node.initializer)) {
-      const updatedFunction = SlowMethodTransform.generateFunctionExpressionCode(node.initializer, ts);
-      return ts.factory.updatePropertyAssignment(
-        node,
-        node.name,
-        updatedFunction
-      );
-    } else if (ts.isArrowFunction(node.initializer)) {
-      const updatedFunction = SlowMethodTransform.generateArrowFunctionCode(node.initializer, ts);
-      return ts.factory.updatePropertyAssignment(
-        node,
-        node.name,
-        updatedFunction
-      );
+      return updatedStatements;
     }
-    return node;
-  }
 
-  static generateUpdatedNode(node, ts) {
-    const nodeKindName = getNodeKindName(ts, node.kind);
-    console.log(`Visiting node: ${nodeKindName} (kind: ${node.kind}) - Content: ${node.getText()}`);
-
-    if (ts.isFunctionDeclaration(node)) {
-      return SlowMethodTransform.generateFunctionDeclarationCode(node, ts);
-    } else if (ts.isFunctionExpression(node)) {
-      return SlowMethodTransform.generateFunctionExpressionCode(node, ts);
-    } else if (ts.isMethodDeclaration(node)) {
-      return SlowMethodTransform.generateMethodDeclarationCode(node, ts);
-    } else if (ts.isGetAccessorDeclaration(node)) {
-      return SlowMethodTransform.generateGetAccessorDeclarationCode(node, ts);
-    } else if (ts.isSetAccessorDeclaration(node)) {
-      return SlowMethodTransform.generateSetAccessorDeclarationCode(node, ts);
-    } else if (ts.isArrowFunction(node)) {
-      return SlowMethodTransform.generateArrowFunctionCode(node, ts);
-    } else if (ts.isPropertyAssignment(node)) {
-      return SlowMethodTransform.generatePropertyAssignmentCode(node, ts);
+    function createEndLogStatements(ts, methodId, startTimeVar) {
+      return [
+        ts.factory.createExpressionStatement(
+          ts.factory.createCallExpression(
+            ts.factory.createIdentifier(insertEndMethodName),
+            undefined,
+            [
+              ts.factory.createStringLiteral(insertLogTag),
+              ts.factory.createBinaryExpression(
+                ts.factory.createStringLiteral(`${methodId} took `),
+                ts.SyntaxKind.PlusToken,
+                ts.factory.createBinaryExpression(
+                  ts.factory.createBinaryExpression(
+                    ts.factory.createCallExpression(
+                      ts.factory.createPropertyAccessExpression(
+                        ts.factory.createIdentifier("Date"),
+                        ts.factory.createIdentifier("now")
+                      ),
+                      undefined,
+                      []
+                    ),
+                    ts.SyntaxKind.MinusToken,
+                    ts.factory.createIdentifier(startTimeVar)
+                  ),
+                  ts.SyntaxKind.PlusToken,
+                  ts.factory.createStringLiteral(" ms")
+                )
+              )
+            ]
+          )
+        )
+      ];
     }
-    return node;
   }
 }
 
+function insertStartMethod(ts, methodId) {
+  return ts.factory.createExpressionStatement(
+    ts.factory.createCallExpression(
+      ts.factory.createIdentifier(insertStartMethodName),
+      undefined,
+      [
+        ts.factory.createStringLiteral(insertLogTag),
+        ts.factory.createStringLiteral(methodId)
+      ]
+    )
+  );
+}
