@@ -1,6 +1,7 @@
 //@ts-ignore
 import path from 'path';
-import { AspectProAopImp } from './aops/AspectProAopImp';
+import { DescriptorMethodAopImp } from './aops/DescriptorMethodAopImp';
+import { ReplaceMethodAopImp } from './aops/ReplaceMethodAopImp';
 import { SlowMethodAopImp } from './aops/SlowMethodAopImp';
 
 /**
@@ -31,7 +32,8 @@ function doTransform() {
         let updateSourcefile = ModuleSourceFile.source;
         // 按需依次处理：多个AOP插桩逻辑
         // updateSourcefile = SlowMethodPlugin.doTransform(ts, updateSourcefile, modulePath)
-        updateSourcefile = AspectProAopImp.doTransform(ts, updateSourcefile, modulePath)
+        updateSourcefile = ReplaceMethodAopImp.doTransform(ts, updateSourcefile, modulePath)
+        updateSourcefile = DescriptorMethodAopImp.doTransform(ts, updateSourcefile, modulePath)
         // ...
         ModuleSourceFile.source = updateSourcefile;
       });

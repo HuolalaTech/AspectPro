@@ -9,7 +9,7 @@ const SPLIT_FLAG = ":"
  * step 二:
  *  将目标函数替换， 比如将router.pushUrl替换为 this.getUIContext().getRouter().pushUrl
  */
-export class AspectProTransform {
+export class ReplaceMethodTransform {
   static doTransform(ts, allReplaceRules: ReplaceRule[]) {
     return (context) => {
       return (sourceFile) => {
