@@ -1,6 +1,5 @@
 import { ImportTransformApi } from '../apis/ImportTransformApi';
 import { MethodTransformApi } from '../apis/MethodTransformApi';
-import { getNodeKindName } from '../apis/TransformApiUtil';
 
 const insertStartMethodName = 'Logger.w';
 const insertEndMethodName = 'Logger.w';
@@ -9,7 +8,7 @@ const importName = 'Logger'
 const importPath = '@package:pkg_modules/.ohpm/@huolala+logger@1.0.0/pkg_modules/@huolala/logger/src/main/com.wp/Logger'
 
 /**
- * AOP插入代码统计方法执行耗时
+ * AOP Transform :插入代码统计方法执行耗时
  * step 一:
  *  函数开头插入 const startTime = Date.now();
  * step 二:

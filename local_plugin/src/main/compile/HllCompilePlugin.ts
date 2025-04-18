@@ -1,47 +1,39 @@
-// import * as ts from 'typescript'  不能使用原生ts模块 必须从sdk中取
 //@ts-ignore
 import path from 'path';
-import { PluginConfigManager } from '../configs/PluginConfigManager';
-import { SlowMethodPlugin } from './slowMethod/SlowMethodPlugin';
+import { AspectProAopImp } from './aops/AspectProAopImp';
+import { SlowMethodAopImp } from './aops/SlowMethodAopImp';
 
+/**
+ * 背景：TS Compiler Api 无法处理ets文件 & Ets 语法解析api官方暂未开发
+ *
+ * 方案: 直接Hvigor plugin 中获取ets_loader 编译工具中this.share 对象，进而获取到 Ets转换后的 ts.sourcefile
+ *
+ *  工作流程
+ * - step 1: ets_loader内部的ts对象
+ * - step 2: 获取this.share.getSourceFiles()中的所有ModuleSourceFile对象
+ * - step 3: 将sourcefile 分发给自定义的AopTransformers 处理
+ * - step 4: 将处理后的updateSourcefile 赋值给ModuleSourceFile对象，系统继续编译生成产物
+ *
+ *  注意事项
+ * - 1: 必须使用ets_loader内部的ts对象，不能用 import * as ts from 'typescript'
+ * - 2: this.share.getSourceFiles()获取到的是ModuleSourceFile包装类, 需要使用 ModuleSourceFile.source 获取到 ts.sourcefile
+ *
+ */
 function doTransform() {
   return {
     name: 'doTransform',
     beforeBuildEnd(this: any) {
-      /**
-       * 1.获取配置文件
-       * 2.获取ets_loader中的 ts对象
-       * 3.获取this.share & sourcefile
-       * 4.将sourcefile分发给 aopPluginImp 进行插桩
-       * 5.将修改后sourcefile赋值给this.share.sourcefile
-       */
-      let allSlowMethodFiles: string[] =
-        PluginConfigManager.parseSlowMethodConfig(this.share.projectConfig.modulePath, '../local_plugin/src/main/configs/txt/slowMethodBlacklist.txt');
-      // console.log("beforeBuildEnd() ----> allSlowMethodFiles: " + allSlowMethodFiles.length);
-      if (allSlowMethodFiles.length <= 0) {
-        return;
-      }
-
       //@ts-ignore
       let ts = require(path.join(this.share.projectConfig.etsLoaderPath, 'node_modules', 'typescript'));
       let modulePath = this.share.projectConfig.modulePath;
-      // 获取所有的 SourceFile  这里拿到的sourceFiles数据 实际上是包装了一层 原始的sourceFile在.source中
       const sourceFiles = this.share.getSourceFiles();
-      // console.log("beforeBuildEnd() ----> this.share 类型: " + typeof this.share);
-      // console.dir(this.share);
-      // console.log("beforeBuildEnd() ----> sourceFiles 长度: " +  sourceFiles.length);
-      // console.dir(sourceFiles);
-      // 遍历所有的sourceFile
       sourceFiles.forEach((ModuleSourceFile) => {
-        // 使用 ts.transform 来应用转换，并获取转换上下文
-        // let result = ts.transform(ModuleSourceFile.source, [createTransformerClass(ts), createTransformerFunction(ts)]);
-        // // result = ts.transform(result, [createTransformerFunction(ts)]);
-        // const printer = ts.createPrinter();
-        // const code = printer.printFile(result.transformed[0]);
-        // // console.log("code:"+code);
-        //
-        // ModuleSourceFile.source = result.transformed[0];
-        ModuleSourceFile.source = SlowMethodPlugin.doTransform(ts, ModuleSourceFile.source, modulePath)
+        let updateSourcefile = ModuleSourceFile.source;
+        // 按需依次处理：多个AOP插桩逻辑
+        // updateSourcefile = SlowMethodPlugin.doTransform(ts, updateSourcefile, modulePath)
+        updateSourcefile = AspectProAopImp.doTransform(ts, updateSourcefile, modulePath)
+        // ...
+        ModuleSourceFile.source = updateSourcefile;
       });
     },
   };
