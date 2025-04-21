@@ -106,7 +106,7 @@ function readConfigFile(configFilePath: string, rootDir: string): { filesToProce
   const replaceRules: ReplaceRule[] = [];
 
   const lines = fs.readFileSync(configFilePath, 'utf-8').split('\n');
-  const replaceRegex = /^-replace\s+([^\s]+)\s+([^\s]+)\s*(?:\[(.*)\])?/;
+  const replaceRegex = /^-target\s+([^\s]+)\s+([^\s]+)\s*(?:\[(.*)\])?/;
 
   lines.map((line: string) => line.trim())
     .filter((line: string) => line.length > 0 && !line.startsWith('#'))

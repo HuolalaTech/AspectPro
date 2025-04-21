@@ -5,7 +5,7 @@ import { getAllFiles, readConfigFile, ReplaceRule, shouldKeep } from './BaseConf
 const TAG = "AspectProConfigParser"
 
 /**
- * 1.plugin 配置解析
+ * 1.函数替换配置解析
  */
 export class AspectProConfigParser {
   static parse(rootDir: string, configFilePath: string): { allFiles: string[]; replaceRules: ReplaceRule[]; } {

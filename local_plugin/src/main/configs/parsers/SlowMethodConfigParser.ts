@@ -5,7 +5,7 @@ import { getAllFiles, readConfigFile, shouldKeep } from './BaseConfigParser';
 const TAG = "SlowMethodConfigParser"
 
 /**
- * 1.plugin 配置解析
+ * 1.函数耗时监控配置解析
  */
 export class SlowMethodConfigParser {
   static parse(rootDir: string, configFilePath: string): string[] {

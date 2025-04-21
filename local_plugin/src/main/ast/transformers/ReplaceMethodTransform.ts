@@ -20,7 +20,7 @@ export class ReplaceMethodTransform {
           }
           let updatedNode = node;
           for (let rule of allReplaceRules) {
-            if (!rule) {
+            if (!rule || rule.pattern === '' || rule.replacement === '') {
               continue;
             }
             if (this.isFunctionCallMatch(node, rule.pattern, ts)) {

@@ -35,13 +35,12 @@ export function writeFile(filePath: string, data: string): void {
 
 export function readConfigFile(rootDir: string, configFilePath: string): Config {
   configFilePath = path.join(rootDir, configFilePath)
-  console.log("readConfigFile() configFilePath:" + configFilePath)
   const filesToProcess: string[] = [];
   const keepFiles: string[] = [];
   const replaceRules: ReplaceRule[] = [];
 
   const lines = fs.readFileSync(configFilePath, 'utf-8').split('\n');
-  const replaceRegex = /^-replace\s+([^\s]+)\s+([^\s]+)\s*(?:\[(.*)\])?/;
+  const replaceRegex = /^-target\s+([^\s]+)(?:\s+([^\s]+))?(?:\s*\[(.*)\])?/;
 
   lines.map(line => line.trim())
     .filter(line => line.length > 0 && !line.startsWith('#'))
@@ -54,7 +53,7 @@ export function readConfigFile(rootDir: string, configFilePath: string): Config 
         const match = replaceRegex.exec(line);
         if (match) {
           const pattern = escapeRegExp(match[1]);
-          const replacement = match[2];
+          const replacement = match[2] || '';
           const imports =
             match[3] ? match[3].split('-import ').filter(Boolean).map(s => s.trim()) :
               [];

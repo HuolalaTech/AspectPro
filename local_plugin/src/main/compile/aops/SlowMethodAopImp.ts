@@ -10,9 +10,6 @@ export class SlowMethodAopImp {
   private static allSlowMethodFiles: string[];
 
   static doTransform(ts, sourcefile, modulePath: string) {
-    if (sourcefile === undefined || sourcefile.fileName === undefined) {
-      return sourcefile;
-    }
 
     if (!SlowMethodAopImp.hasParseConfigFile) {
       SlowMethodAopImp.allSlowMethodFiles =

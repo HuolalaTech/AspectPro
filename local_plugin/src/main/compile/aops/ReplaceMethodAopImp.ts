@@ -12,9 +12,6 @@ export class ReplaceMethodAopImp {
   private static allReplaceRules: ReplaceRule[]
 
   static doTransform(ts, sourcefile, modulePath: string) {
-    if (sourcefile === undefined || sourcefile.fileName === undefined) {
-      return sourcefile;
-    }
 
     if (!ReplaceMethodAopImp.hasParseConfigFile) {
       let allAspectProConfig: { allFiles: string[]; replaceRules: ReplaceRule[]; } =
@@ -32,7 +29,7 @@ export class ReplaceMethodAopImp {
     let isTargetFile = ReplaceMethodAopImp.allAspectProFiles.indexOf(sourcefile.fileName);
     if (isTargetFile !== -1) {
       let filePath = ReplaceMethodAopImp.allAspectProFiles[isTargetFile];
-      console.log("AspectProPlugin-> doTransform() ----> 开始处理目标文件: " + filePath)
+      console.log("ReplaceMethodAopImp-> doTransform() ----> 开始处理目标文件: " + filePath)
       let result = ts.transform(sourcefile, [ReplaceMethodTransform.doTransform(ts, ReplaceMethodAopImp.allReplaceRules)]);
       return result.transformed[0];
     } else {

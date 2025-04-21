@@ -69,7 +69,6 @@ export default class EntryAbility extends UIAbility {
 
     // 4.hook httpClient method
     testHookHttpClientBuild()
-
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {

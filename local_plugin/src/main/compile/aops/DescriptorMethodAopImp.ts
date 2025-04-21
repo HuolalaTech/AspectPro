@@ -5,12 +5,8 @@ import { DescriptorMethodTransform } from '../../ast/transformers/DescriptorMeth
  */
 export class DescriptorMethodAopImp {
   static doTransform(ts, sourcefile, modulePath: string) {
-    if (sourcefile === undefined || sourcefile.fileName === undefined) {
-      return sourcefile;
-    }
-    console.log("DescriptorMethodAopImp -> doTransform() ----> 开始处理目标文件: " + sourcefile.fileName)
+    // console.log("DescriptorMethodAopImp -> doTransform() ----> 开始处理目标文件: " + sourcefile.fileName)
     let result = ts.transform(sourcefile, [DescriptorMethodTransform.doTransform(ts)]);
     return result.transformed[0];
-
   }
 }

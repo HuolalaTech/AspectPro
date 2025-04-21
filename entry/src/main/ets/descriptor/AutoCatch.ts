@@ -1,5 +1,23 @@
+/**
+ * 类装饰器，用于标记某个类，并执行一些操作。
+ *
+ * 装饰器适用于   : 小范围的标记配置
+ * 配置文件适用于 : 大范围的标记配置 (比如：local_plugin/src/main/configs/txt/aspectProPluginConfig.txt)
+ */
+export function MyClassDescriptor(constructor: Function) {
+}
 
-function AutoCatch<T>(target: Object, key: string, descriptor: TypedPropertyDescriptor<(...args: any[]) => T>): TypedPropertyDescriptor<(...args: any[]) => T> {
+/**
+ * 自动添加catch
+ * 使用姿势：
+ * @AutoCatch
+ * xxxMethod(a:number): string {
+ let b = 100/a; // 这里可能会报错，因为a可能为0
+ }
+ *
+ */
+export function AutoCatch<T>(target: Object, key: string,
+  descriptor: TypedPropertyDescriptor<(...args: any[]) => T>): TypedPropertyDescriptor<(...args: any[]) => T> {
   const originalMethod = descriptor.value!;
 
   descriptor.value = function (...args: any[]): T {
@@ -7,7 +25,6 @@ function AutoCatch<T>(target: Object, key: string, descriptor: TypedPropertyDesc
       console.log(`Calling ${target.constructor.name} method ${key} with arguments: ${args}`);
       return originalMethod.apply(this, args);
     } catch (e) {
-      console.error(`Error in ${target.constructor.name}.${key}:`, e);
       return getDefaultValue<T>();
     }
   };

@@ -1,6 +1,7 @@
 //@ts-ignore
 import path from 'path';
 import { DescriptorMethodAopImp } from './aops/DescriptorMethodAopImp';
+import { PrivacyMethodAopImp } from './aops/PrivacyMethodAopImp';
 import { ReplaceMethodAopImp } from './aops/ReplaceMethodAopImp';
 import { SlowMethodAopImp } from './aops/SlowMethodAopImp';
 
@@ -30,134 +31,33 @@ function doTransform() {
       const sourceFiles = this.share.getSourceFiles();
       sourceFiles.forEach((ModuleSourceFile) => {
         let updateSourcefile = ModuleSourceFile.source;
-        // 按需依次处理：多个AOP插桩逻辑
-        // updateSourcefile = SlowMethodPlugin.doTransform(ts, updateSourcefile, modulePath)
+
+        if (!isValidSourceFile(updateSourcefile)) {
+          return updateSourcefile;
+        }
+
+        // 按需依次处理：多个AOP插桩逻辑 (可简单理解为：Android apply plugin)
+        updateSourcefile = SlowMethodAopImp.doTransform(ts, updateSourcefile, modulePath)
         updateSourcefile = ReplaceMethodAopImp.doTransform(ts, updateSourcefile, modulePath)
         updateSourcefile = DescriptorMethodAopImp.doTransform(ts, updateSourcefile, modulePath)
+        updateSourcefile = PrivacyMethodAopImp.doTransform(ts, updateSourcefile, modulePath)
         // ...
         ModuleSourceFile.source = updateSourcefile;
       });
     },
   };
-}
 
-// 创建转换器工厂
-function createTransformerClass(ts) {
-  return (context) => {
-    return (node) => visitClassNode(node, context, ts);
-  };
-}
-
-function createTransformerFunction(ts) {
-  return (context) => {
-    return (node) => visitFunctionNode(node, context, ts);
-  };
-}
-
-// 递归遍历AST中的所有节点 插装具体逻辑 示例是找到所有带有@ClassDes注解的类，在类中添加一个最基础的静态方法
-function visitClassNode(node, context, ts) {
-  if (ts.isClassDeclaration(node)) {
-    const decoratorName = 'ClassDes';
-    // 查找类上是否有目标装饰器
-    //@ts-ignore
-    const hasDecorator = node.modifiers?.some((modifier) => {
-      if (modifier?.expression?.escapedText) {
-        console.log(modifier.expression.escapedText);
-        if (ts.isIdentifier(modifier.expression)) {
-          return modifier.expression.escapedText === decoratorName;
-        }
-      }
+  function isValidSourceFile(sourcefile) {
+    if (sourcefile === undefined || sourcefile.fileName === undefined) {
       return false;
-    });
-
-    // 如果类上有指定的装饰器，添加静态方法
-    if (hasDecorator) {
-      const staticMethod = context.factory.createMethodDeclaration(
-        [context.factory.createToken(ts.SyntaxKind.StaticKeyword)], // 静态方法修饰符
-        undefined,
-        'myStaticMethod', // 方法名
-        undefined,
-        undefined,
-        [],
-        undefined,
-        context.factory.createBlock([
-          context.factory.createExpressionStatement(
-            context.factory.createCallExpression(context.factory.createIdentifier('console.log'), undefined, [
-              context.factory.createStringLiteral('Static method called!'),
-            ]),
-          ),
-        ]),
-      );
-
-      // 创建新的修饰符（包括装饰器）
-      const newModifiers = [
-        ...(node.modifiers || []), // 继承现有修饰符
-        ...(node.decorators?.map(
-          (decorator) => ts.factory.createDecorator(decorator.expression), // 将装饰器移到修饰符中
-        ) || []),
-      ];
-
-      // 返回修改后的类节点
-      return context.factory.updateClassDeclaration(
-        node,
-        newModifiers, // 将新的修饰符作为参数
-        node.name,
-        node.typeParameters,
-        node.heritageClauses,
-        [...node.members, staticMethod], // 在类的成员中添加静态方法
-      );
     }
+
+    const fileName = sourcefile.fileName.toLowerCase();
+    const validExtensions = ['.js', '.ts', '.ets'];
+
+    const isFileValid = validExtensions.some(extension => fileName.endsWith(extension));
+    return isFileValid;
   }
-  // 递归遍历子节点
-  return ts.visitEachChild(node, (childNode) => visitClassNode(childNode, context, ts), context);
-}
-
-// 递归遍历AST中的所有节点 插装具体逻辑 示例是找到所有带有@FunctionTest注解的方法，在调用前添加一段逻辑 如果要在之后添加逻辑 需要处理代码中可能存在的return逻辑
-function visitFunctionNode(node, context, ts) {
-  if (ts.isMethodDeclaration(node)) {
-    const decoratorName = 'FunctionTest';
-    // 查找类上是否有目标装饰器
-    //@ts-ignore
-    const hasDecorator = node.modifiers?.some((modifier) => {
-      if (modifier?.expression?.escapedText) {
-        console.log(modifier.expression.escapedText);
-        if (ts.isIdentifier(modifier.expression)) {
-          return modifier.expression.escapedText === decoratorName;
-        }
-      }
-      return false;
-    });
-
-    // 如果类上有指定的装饰器，在调用前添加一段逻辑
-    if (hasDecorator) {
-      const methodBody = node.body ? node.body.statements : [];
-
-      const newMethodBody = ts.factory.createBlock([
-      // 在方法开始前添加逻辑
-        ts.factory.createExpressionStatement(ts.factory.createCallExpression(
-          ts.factory.createIdentifier('console.log'),
-          undefined,
-          [ts.factory.createStringLiteral('Before test execution')]
-        )),
-        ...node.body?.statements || [], // 保持原始方法体
-      ], true);
-
-      // 更新原方法体
-      return ts.factory.updateMethodDeclaration(
-        node,
-        node.modifiers,
-        node.name,
-        node.questionToken,
-        undefined,
-        node.typeParameters,
-        node.parameters,
-        node.type,
-        newMethodBody
-      );
-    }
-  }
-  // 递归遍历子节点
-  return ts.visitEachChild(node, (childNode) => visitFunctionNode(childNode, context, ts), context);
 }
 
 export default doTransform();
