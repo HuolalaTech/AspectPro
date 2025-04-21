@@ -8,12 +8,9 @@ export class DescriptorMethodAopImp {
     if (sourcefile === undefined || sourcefile.fileName === undefined) {
       return sourcefile;
     }
-    if (sourcefile.fileName.includes("TestClass2")) {
-      console.log("DescriptorMethodAopImp -> doTransform() ----> 开始处理目标文件: " + sourcefile.fileName)
-      let result = ts.transform(sourcefile, [DescriptorMethodTransform.doTransform(ts)]);
-      return result.transformed[0];
-    }
-    return sourcefile;
+    console.log("DescriptorMethodAopImp -> doTransform() ----> 开始处理目标文件: " + sourcefile.fileName)
+    let result = ts.transform(sourcefile, [DescriptorMethodTransform.doTransform(ts)]);
+    return result.transformed[0];
 
   }
 }

@@ -9,10 +9,7 @@ export class ImportTransformApi {
    */
   static addImportStatement(sourceFile, ts, importName: string,
     importPath: string) {
-    console.log("addImportStatement() ----> 开始处理导入语句importName: " + importName)
-    console.log("addImportStatement() ----> importPath: " + importPath)
     if (this.isImportExist(sourceFile, ts, importPath, importName)) {
-      console.log("addImportStatement() ----> 已经存在 " + importPath)
       return sourceFile;
     }
 

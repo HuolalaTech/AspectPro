@@ -11,9 +11,9 @@ const importPath = '@package:pkg_modules/.ohpm/@huolala+logger@1.0.0/pkg_modules
 /**
  * AOP Transform : 修改“特定装饰器修饰”的方法
  * step 一:
- *  遍历找到函数调用，找到“特定装饰器修饰”
+ *  遍历遍历AST找到“特定装饰器修饰”的类
  * step 二:
- *  修改函数 (本例子仅：增加日志)
+ *  在类中查到“特定装饰器修饰”函数并修改 (本例子仅：增加日志)
  */
 export class DescriptorMethodTransform {
   static doTransform(ts) {
@@ -55,11 +55,14 @@ export class DescriptorMethodTransform {
 
   static hasDecorator(node, decoratorName, ts) {
     return node.modifiers && node.modifiers.some(modifier => {
-      let expression = modifier.expression;
-      if (ts.isCallExpression(modifier.expression)) {
-        expression = modifier.expression.expression;
+      if ('expression' in modifier) {
+        let expression = modifier.expression;
+        if (ts.isCallExpression(modifier.expression)) {
+          expression = modifier.expression.expression;
+        }
+        return ts.isIdentifier(expression) && expression.text === decoratorName;
       }
-      return ts.isIdentifier(expression) && expression.text === decoratorName;
+      return false;
     });
   }
 
