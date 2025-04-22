@@ -3,6 +3,7 @@ import { ReplaceRule } from '../../configs/parsers/BaseConfigParser';
 import { PluginConfigManager } from '../../configs/PluginConfigManager';
 
 const ASPECT_PRO_CONFIG_FILE_ABS_PATH: string = '../local_plugin/src/main/configs/txt/aspectProPluginConfig.txt'
+
 /**
  * AOP编译时：替换方法调用
  */
@@ -30,7 +31,8 @@ export class ReplaceMethodAopImp {
     if (isTargetFile !== -1) {
       let filePath = ReplaceMethodAopImp.allAspectProFiles[isTargetFile];
       console.log("ReplaceMethodAopImp-> doTransform() ----> 开始处理目标文件: " + filePath)
-      let result = ts.transform(sourcefile, [ReplaceMethodTransform.doTransform(ts, ReplaceMethodAopImp.allReplaceRules)]);
+      let result =
+        ts.transform(sourcefile, [ReplaceMethodTransform.doTransform(ts, ReplaceMethodAopImp.allReplaceRules)]);
       return result.transformed[0];
     } else {
       return sourcefile;

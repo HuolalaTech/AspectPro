@@ -1,5 +1,4 @@
-import { ReplaceRule } from "../../configs/parsers/BaseConfigParser";
-import { ImportTransformApi } from "../apis/ImportTransformApi";
+import { ReplaceRule } from '../../configs/parsers/BaseConfigParser';
 
 const SPLIT_FLAG = ":"
 
@@ -34,7 +33,8 @@ export class PrivacyMethodTransform {
 
               const className = curClassName || 'UnknownClass';
               const methodName = curMethodName || 'UnknownMethod';
-              console.log(`PrivacyMethodTransform-> [Found privacy API <${rule.pattern}>call in ${className}.${methodName} at line:${line + 1}]`);
+              console.log(`PrivacyMethodTransform-> [Found privacy API <${rule.pattern}>call in ${className}.${methodName} at line:${line +
+                1}]`);
             }
           }
 

@@ -1,7 +1,8 @@
-import { ReplaceRule } from "../../configs/parsers/BaseConfigParser";
-import { ImportTransformApi } from "../apis/ImportTransformApi";
+import { ReplaceRule } from '../../configs/parsers/BaseConfigParser';
+import { ImportTransformApi } from '../apis/ImportTransformApi';
 
 const SPLIT_FLAG = ":"
+
 /**
  * AOP Transform : 方法调用替换
  * step 一:
@@ -108,6 +109,5 @@ export class ReplaceMethodTransform {
 
     return node;
   }
-
 }
 

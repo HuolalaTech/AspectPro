@@ -1,0 +1,12 @@
+{
+  "aopConfigs": [
+    {
+      "name": "YourSlowMethodAop",
+      "path": "/Users/greek.chen/HarmonyOs/openSource/AspectPro/entry/src/main/yourAop/YourSlowMethodAop.ts"
+    },
+    {
+      "name": "YourEmptyAop",
+      "path": "/Users/greek.chen/HarmonyOs/openSource/AspectPro/entry/src/main/yourAop/YourEmptyAop.ts"
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import { PluginConfigManager } from '../../configs/PluginConfigManager';
 import { SlowMethodTransform } from '../../ast/transformers/SlowMethodTransform';
 
 const SLOW_METHOD_CONFIG_FILE_ABS_PATH: string = '../local_plugin/src/main/configs/txt/slowMethodBlacklist.txt'
+
 /**
  * AOP编译时：插入方法执行耗时统计
  */

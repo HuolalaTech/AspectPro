@@ -9,9 +9,9 @@ import { hapTasks } from '@ohos/hvigor-ohos-plugin';
 // }
 
 // TODO 开发阶段 - 依赖local plugin
-import { HllHvigorPlugin } from '../local_plugin/src/main/HllHvigorPlugin';
+import { aspectProPluginV2 } from '../local_plugin/src/main/AspectProPluginV2';
 
 export default {
   system: hapTasks,
-  plugins: [HllHvigorPlugin('../local_plugin/src/main/compile/HllCompilePlugin.ts')]
+  plugins: [aspectProPluginV2(/*'../local_plugin/src/main/compile/AspectCompilePlugin.ts'*/)]
 }
