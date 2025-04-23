@@ -1,1 +1,1 @@
-export { aspectProPlugin } from './aspect-pro-plugin';
+export { aspectProPluginV2 } from './src/main/AspectProPluginV2';

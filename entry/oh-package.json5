@@ -10,7 +10,7 @@
     "@huolala/logger": "^1.0.0",
     "@ohos/httpclient": "^2.0.0",
 //    "@huolala/aspectpro": "^1.0.0-rc.1"
-    "local_plugin": "file:../local_plugin"
+//    "local_plugin": "file:../local_plugin"
   },
   "devDependencies": {},
   "dynamicDependencies": {}

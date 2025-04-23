@@ -1,8 +1,8 @@
 {
   "name": "aspect-pro-plugin",
-  "version": "1.0.0",
-  "description": "aspect-pro-plugin is a harmonyos code comlipation and modify plugin for hvigor",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "aspect-pro-plugin is a HarmonyOs compile-time AST Aop plugin",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,8 +10,5 @@
   "license": "ISC",
   "devDependencies": {
     "@ohos/hvigor": "5.2.2"
-  },
-  "dependencies": {
-    "typescript": "^5.8.3"
   }
 }

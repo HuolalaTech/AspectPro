@@ -1,74 +1,76 @@
-# <center>AspectPro</center>
+# <center>AspectPro Aop Plugin</center>
 
 -------------------------------------------------------------------------------
-**[中文文档](README_CN.md)** ｜ **[Introduction](README.md)**
+** **[Introduction](README.md) | [中文文档](README_CN.md)** ｜**
 
 ## Introduction
 
-`aspect-pro-plugin` is a lightweight code modification framework during the compile time for HarmonyOS.
+`aspect-pro-plugin`is a lightweight HarmonyOS compile-time AST AOP plugin。
 
-1. Supports Scanning Specified Folders/Files: -hook xxx
-
-2. Supports Keeping Specified Folders/Files: -keep xxx
-
-3. Supports Replacing Specific Code in -hook Folders/Files: -replace xxx to yyy (xxx is the code before replacement, yyy
-   is the code after replacement)
-
-4. Supports Automatically Importing Packages during Replacement: -replace xxx to yyy [import aaa; import bbb]
-
-5. Support extension (aspectProPluginHvigorfileCode is the plugin source code, rename it to hvigorfile to develop locally)
-
-6. Support custom configuration rules (refer to aspectProPluginConfig.txt)
+* **1.Support HarmonyOS compile-time AOP instrumentation in just 3 minutes**
+* **2.Supports ets, ts, js syntax parsing & AOP instrumentation**
+* **3.Supports custom configuration rules (refer to aspectProPluginConfig.txt)**
+* **4.Supports automatic import with replace feature**
+* **5.Rich instrumentation demo examples (function timing, function replacement, privacy function call detection, decorator functions, etc.)**
 
 -------------------------------------------------------------------------------
 
-## Download and Installation
+## 3 Steps to use Aop Plugin
 
 ```shell
-**Plugin Dependency<optional>**
-1.Add the following to the entry's  hvigorfile.ts
-import { aspectProPlugin } from 'aspect-pro-plugin';
+1.Add and use the aspect-pro-plugin plugin 
+  1.1 Add it to the project hvigor-package.json file
+"dependencies": {
+    "aspect-pro-plugin": "2.0.0"
+  }
+  1.2 Use it in the hvigorfile.ts file of the entry or other modules 
+import { aspectProPluginV2 } from 'aspect-pro-plugin';
 export default {
-  system: hapTasks, 
-  plugins: [aspectProPlugin()]
+  system: hapTasks, /* Built-in plugin of Hvigor. It cannot be modified. */
+  plugins: [aspectProPluginV2(require.resolve('aspect-pro-plugin'))]
 }
 
-3.Create a new aspectProPluginConfig.txt in the entry's 
-# Configuration Rules - The plugin reads the configuration file line by line (by default, it reads all .js, .ts, and .ets files in the same directory as the hvigor-file)
-# -hook path | file : Configure the file directory | file to be hooked and processed
-# -keep path | file : Configure the additional directories | files to keep (optional, used when there are special files in the -hook file directory that do not need to be processed)
-# -replace pattern replacement [import xxx;import xxx] : Configure the regular expression to be replaced and the corresponding replacement content [import aaa import bbb] for new dependencies to be imported
+2. Create an aop/aopConfig.json file in the project directory and configure the absolute path of your AOP implementation classes.
+{
+  "aopConfigs": [
+    {
+      "name": "YourSlowMethodAop",
+      "path": "/Users/xxx/HarmonyOs/openSource/AspectPro/entry/src/main/yourAop/YourSlowMethodAop.ts"
+    },
+    {
+      "name": "YourEmptyAop",
+      "path": "/Users/xxx/HarmonyOs/openSource/AspectPro/entry/src/main/yourAop/YourEmptyAop.ts"
+    }
+  ]
+}
 
-# For example:
-#-hook ./src/main/ets/
--keep ./src/main/ets/hook/
--replace router.pushUrl this.getUIContext().getRouter().pushUrl
-#-replace router.pushUrl this.getUIContext().getRouter().pushUrl [import { Logger } from '@huolala/logger';]
+3. Implement the doTransform() method in your YourSlowMethodAop.ts file and export your AOP instrumentation logic.
+export class YourSlowMethodAop {
+  /**
+   * 3.1 This method must be implemented in the following format.
+   * @param ts         ts object from HarmonyOS ets_loader
+   * @param sourcefile ts sourcefile object processed by HarmonyOS ets_loader
+   * @param modulePath current project path
+   * @returns          sourcefile
+   */
+  static doTransform(ts, sourcefile, modulePath: string) {
+    try {
+      // TOOD Implement your instrumentation logic
+      if (sourcefile.fileName.includes("EntryAbility.ets")) {
+        console.log(`YourSlowMethodAop -> doTransform() ----> 开始处理目标文件:${sourcefile.fileName}`);
+        let result = ts.transform(sourcefile, [YourSlowMethodTransform.doTransform(ts)]);
+        return result.transformed[0];
+      }
+    } catch (e) {
+      console.log(`YourSlowMethodAop -> doTransform()  exp:${e} ,sourcefile:${sourcefile.fileName}`);
+    }
+    return sourcefile;
+  }
+}
 
-#Supporting third-party library code replacement
-#-hook ./oh_modules/@hll-wp/foundation/src/main/com.wp.foundation/utils/WPFUtil.js
--replace IdUtils.next IdUtils.uuid
-```
-
-For more information regarding environment configuration for OpenHarmony ohpm, please refer
-to[How to install OpenHarmony ohpm package](https://gitee.com/openharmony-tpc/docs/blob/master/OpenHarmony_har_usage.md)
-
-## Usage instruction
-
-**1. Usage instruction**
-
- ```
-   import AspectPro from '@hll-wp/aspectpro'
- ```
-
-**2. User Guide**
-
-* **2.1 Basic Hook**
-
-```
-   AspectPro.addBefore(TestClass1, "a", () => {
-            Logger.w(TAG, "1.AspectPro add before ---- TestClass1#a() ，do your business ...");
-        }) 
+// 3.2 Must be exported, used internally by the plugin through require
+//@ts-ignore
+module.exports = YourSlowMethodAop;
 ```
 
 

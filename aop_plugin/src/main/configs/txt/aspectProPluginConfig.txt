@@ -1,0 +1,21 @@
+# 配置规则说明 - plugin 按行读取配置文件 (默认读取hvigor-file同级目录 所有.js 、.ts 、 .ets文件)
+# -hook path ｜ file : 配置需要hook 处理的文件目录 | 文件
+# -keep path ｜ file : 配置需要额外 keep 的目录 | 文件  (非必需， 当-hook 的文件目录中有一些特殊文件，不需要处理时，配合使用)
+# -target pattern replacement [import xxx';import xxx] : 配置替换的原始函数和对目标函数 [import aaa;import bbb] 同时需要新导入的依赖
+
+# 比如:
+#-hook ./src/main/ets/test/TestClass1.ts
+-hook ./src/main/ets/pages/Index.ets
+#-hook ./src/main/ets/entryability/EntryAbility.ets
+-keep ./src/main/ets/hook/
+#-target router:pushUrl this.getUIContext().getRouter():pushUrl
+-target router:pushUrl this.getUIContext().getRouter():pushUrl [-import Logger:@huolala/logger/src/main/com.wp/Logger]
+
+# 支持三方库代码替换 (需要注意三方库的路径)
+#-hook ../oh_modules/.ohpm/@huolala+logger@1.0.0/oh_modules/@huolala/logger/src/main/com.wp/Logger.ts
+#-target Logger:i Logger:e
+
+# AspectPro库都keep
+-keep ./oh_modules/@huolala/aspectpro/
+-keep ../local_plugin/
+-keep ../aop_plugin/

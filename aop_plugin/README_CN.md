@@ -1,70 +1,78 @@
-# <center>AspectPro</center>
+# <center>AspectPro Aop Plugin</center>
 
 -------------------------------------------------------------------------------
 **[中文文档](README_CN.md)** ｜ **[Introduction](README.md)**
 
 ## 简介
 
-`aspect-pro-plugin`是一款轻量级的鸿蒙编译时代码修改框架。
+`aspect-pro-plugin`是一款轻量级的鸿蒙编译时AST AOP 插件。
 
-* **1.支持扫描指定文件夹｜文件 ：-hook xxx**
-* **2.支持keep指定文件夹｜文件 ：-keep xxx**
-* **3.支持替换-hook文件夹｜文件下指定代码 ：-replace xxx to yyy (xxx为替换前代码 yyy替换后代码)**
-* **4.支持replace时自动导包 -replace xxx to yyy [import xxx import bbb]**
-* **5.支持扩展(aspectProPluginHvigorfileCode 是plugin源码, 重命名为hvigorfile即可本地开发)**
-* **6.支持自定义配置规则 (参考aspectProPluginConfig.txt)**
+* **1.3分钟即可快速支持鸿蒙编译时aop插桩能力**
+* **2.支持ets、ts、js 语法解析 & aop插桩**
+* **3.支持自定义配置规则 (参考aspectProPluginConfig.txt)**
+* **4.支持replace自动导包**
+* **5.丰富插桩demo示例 (函数耗时、函数替换、隐私函数调用检测、装饰器函数...)**
 
 -------------------------------------------------------------------------------
 
-## 下载安装
+## 3步集成Aop Plugin
 
 ```shell
-**Har 依赖**
-1.使用插件在entry或其他模块的 hvigorfile.ts文件中添加
-import { aspectProPlugin } from 'aspect-pro-plugin';
+1.添加并使用aspect-pro-plugin插件
+  1.1 在工程hvigor-package.json文件中添加
+"dependencies": {
+    "aspect-pro-plugin": "2.0.0"
+  }
+  1.2 在entry或其他模块的 hvigorfile.ts文件中使用
+import { aspectProPluginV2 } from 'aspect-pro-plugin';
 export default {
-  system: appTasks, 
-  plugins: [aspectProPlugin()]
+  system: hapTasks, /* Built-in plugin of Hvigor. It cannot be modified. */
+  plugins: [aspectProPluginV2(require.resolve('aspect-pro-plugin'))]
 }
 
-3.创建插件配置文件 aspectProPluginConfig.txt 和第二步目录保持一致即可
-# 配置规则 
-  -hook path | file : 配置需要被hook的文件/文件夹 <相对路径>
-  -keep path | file : 配置需要keep的文件/文件夹 <相对路径>
-  -replace pattern replacement [import xxx import xxx] : 配置需要替换的代码,花括号是配置自动导包
+2.在工程目录下创建aop/aopConfig.json文件, 配置你的aop实现类绝对路径
+{
+  "aopConfigs": [
+    {
+      "name": "YourSlowMethodAop",
+      "path": "/Users/xxx/HarmonyOs/openSource/AspectPro/entry/src/main/yourAop/YourSlowMethodAop.ts"
+    },
+    {
+      "name": "YourEmptyAop",
+      "path": "/Users/xxx/HarmonyOs/openSource/AspectPro/entry/src/main/yourAop/YourEmptyAop.ts"
+    }
+  ]
+}
 
-# 示例:
-  -hook ./src/main/ets/
-  -keep ./src/main/ets/hook/
-  -replace router.pushUrl this.getUIContext().getRouter().pushUrl
-  #-replace router.pushUrl this.getUIContext().getRouter().pushUrl [import { Logger } from '@huolala/logger';]
+3.在你的YourSlowMethodAop.ts这个实现 doTransform()方法实现你的aop插桩逻辑并导出
+export class YourSlowMethodAop {
+  /**
+   * 3.1 此方法必须按下述格式实现
+   * @param ts         鸿蒙ets_loader中的ts对象
+   * @param sourcefile 鸿蒙ets_loader处理后的 ts sourcefile对象
+   * @param modulePath 当前工程路径
+   * @returns          sourcefile
+   */
+  static doTransform(ts, sourcefile, modulePath: string) {
+    try {
+      // TOOD 实现你的插桩逻辑
+      if (sourcefile.fileName.includes("EntryAbility.ets")) {
+        console.log(`YourSlowMethodAop -> doTransform() ----> 开始处理目标文件:${sourcefile.fileName}`);
+        let result = ts.transform(sourcefile, [YourSlowMethodTransform.doTransform(ts)]);
+        return result.transformed[0];
+      }
+    } catch (e) {
+      console.log(`YourSlowMethodAop -> doTransform()  exp:${e} ,sourcefile:${sourcefile.fileName}`);
+    }
+    return sourcefile;
+  }
+}
 
-#支持三方库
-  -hook ./oh_modules/@hll-wp/foundation/src/main/com.wp.foundation/utils/WPFUtil.js
-  -replace IdUtils.next IdUtils.uuid
+// 3.2 必须导出, plugin 内部使用require方式import
+//@ts-ignore
+module.exports = YourSlowMethodAop;
 ```
 
-OpenHarmony ohpm
-环境配置等更多内容，请参考[如何安装 OpenHarmony ohpm 包](https://gitee.com/openharmony-tpc/docs/blob/master/OpenHarmony_har_usage.md)
-
-## 使用说明
-
-**1. 引入依赖**
-
- ```
-   import AspectPro from '@hll-wp/aspectpro'
- ```
-
-**2. 使用介绍**
-
-* **2.1 Basic Hook**
-
-```
-   AspectPro.addBefore(TestClass1, "a", () => {
-            Logger.w(TAG, "1.AspectPro add before ---- TestClass1#a() ，do your business ...");
-        })
-    
-```
 
 
 

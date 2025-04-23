@@ -49,9 +49,9 @@
       "name": "aop_library",
       "srcPath": "./aop_library",
     },
-    {
+    /*{
       "name": "local_plugin",
       "srcPath": "./local_plugin",
-    }
+    }*/
   ]
 }

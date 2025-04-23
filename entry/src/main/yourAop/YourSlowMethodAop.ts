@@ -6,7 +6,7 @@ export class YourSlowMethodAop {
    * @param ts         (鸿蒙ets_loader中的ts对象)
    * @param sourcefile (鸿蒙ets_loader处理后的 ts sourcefile对象)
    * @param modulePath (当前工程路径)
-   * @returns          (鸿蒙ets_loader中的ts对象)
+   * @returns          (修改后的sourcefile)
    */
   static doTransform(ts, sourcefile, modulePath: string) {
     try {
