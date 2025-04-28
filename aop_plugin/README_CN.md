@@ -21,7 +21,7 @@
 1.添加并使用aspect-pro-plugin插件
   1.1 在工程hvigor-package.json文件中添加
 "dependencies": {
-    "aspect-pro-plugin": "2.0.0"
+    "aspect-pro-plugin": "2.0.1"
   }
   1.2 在entry或其他模块的 hvigorfile.ts文件中使用
 import { aspectProPluginV2 } from 'aspect-pro-plugin';
@@ -35,7 +35,7 @@ export default {
   "aopConfigs": [
     {
       "name": "YourSlowMethodAop",
-      "path": "/Users/xxx/HarmonyOs/openSource/AspectPro/entry/src/main/yourAop/YourSlowMethodAop.ts"
+      "path": "./src/main/yourAop/YourSlowMethodAop.ts"
     },
     {
       "name": "YourEmptyAop",

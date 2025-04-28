@@ -58,8 +58,14 @@ function doTransform() {
 
   function realTransform(aopConfigs: any, updateSourcefile: any, ts: any, modulePath: any) {
     aopConfigs.forEach((config) => {
+      let aopPath:string;
+      if (path.isAbsolute(config.path)) {
+        aopPath = config.path
+      } else {
+        aopPath = path.resolve(modulePath, config.path)
+      }
       //@ts-ignore
-      const aopImpClass = require(config.path);
+      const aopImpClass = require(aopPath);
       if (aopImpClass && aopImpClass.doTransform) {
         updateSourcefile = aopImpClass.doTransform(ts, updateSourcefile, modulePath);
       } else {

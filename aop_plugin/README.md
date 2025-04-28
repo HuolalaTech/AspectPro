@@ -21,7 +21,7 @@
 1.Add and use the aspect-pro-plugin plugin 
   1.1 Add it to the project hvigor-package.json file
 "dependencies": {
-    "aspect-pro-plugin": "2.0.0"
+    "aspect-pro-plugin": "2.0.1"
   }
   1.2 Use it in the hvigorfile.ts file of the entry or other modules 
 import { aspectProPluginV2 } from 'aspect-pro-plugin';
@@ -35,7 +35,7 @@ export default {
   "aopConfigs": [
     {
       "name": "YourSlowMethodAop",
-      "path": "/Users/xxx/HarmonyOs/openSource/AspectPro/entry/src/main/yourAop/YourSlowMethodAop.ts"
+      "path": "./src/main/yourAop/YourSlowMethodAop.ts"
     },
     {
       "name": "YourEmptyAop",

@@ -69,6 +69,7 @@ export class PrivacyMethodTransform {
         }
       }
     } catch (e) {
+      console.log(`isFunctionCallMatch() occurs exp:${e}`)
       return false;
     }
     return false;

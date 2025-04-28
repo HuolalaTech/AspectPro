@@ -78,6 +78,7 @@ export class ReplaceMethodTransform {
         }
       }
     } catch (e) {
+      console.log(`isFunctionCallMatch() occurs exp:${e}`)
       return false;
     }
     return false;

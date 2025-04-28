@@ -4,7 +4,7 @@ import { hvigor, HvigorNode, HvigorPlugin } from '@ohos/hvigor';
 import { OhosHapContext, OhosPluginId } from '@ohos/hvigor-ohos-plugin';
 
 //@ts-ignore
-
+import * as path from 'path';
 /**
  * 背景：TS Compiler Api 无法处理ets文件 & Ets 语法解析api官方暂未开发
  *
