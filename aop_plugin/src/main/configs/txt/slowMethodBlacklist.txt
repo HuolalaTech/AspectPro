@@ -1,0 +1,20 @@
+# 配置规则说明 - plugin 按行读取配置文件 (默认读取hvigor-file同级目录 所有.js 、.ts 、 .ets文件)
+# -hook path ｜ file : 配置需要hook 处理的文件目录 | 文件
+# -keep path ｜ file : 配置需要额外 keep 的目录 | 文件  (非必需， 当-hook 的文件目录中有一些特殊文件，不需要处理时，配合使用)
+
+# 比如:
+-hook ./src/main/ets/test/TestClass1.ts
+#-hook ./src/main/ets/test/TestClass2.ets
+#-hook ./src/main/ets/pages/Index.ets
+-hook ./src/main/ets/entryability/EntryAbility.ets
+#-hook ../local_plugin/src/main/test/TestTs.ts
+
+# 支持三方库代码替换
+#-hook ./oh_modules/@huolala/logger/src/main/com.wp/Logger.ts
+
+# AspectPro库都keep
+-keep ./oh_modules/@huolala/aspectpro/
+
+# local_plugin
+-keep ../local_plugin/
+-keep ../aop_plugin/

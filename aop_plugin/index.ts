@@ -1,0 +1,1 @@
+export { aspectProPluginV2 } from './src/main/AspectProPluginV2';

@@ -1,0 +1,1 @@
+"use strict";var EventType;Object.defineProperty(exports,"__esModule",{value:!0}),exports.EventType=void 0,function(e){e[e.START_DIRECTORY=0]="START_DIRECTORY",e[e.END_DIRECTORY=1]="END_DIRECTORY",e[e.ENTRY=2]="ENTRY"}(EventType=exports.EventType||(exports.EventType={}));

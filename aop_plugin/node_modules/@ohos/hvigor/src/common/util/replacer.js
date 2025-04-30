@@ -1,0 +1,1 @@
+"use strict";function replacer(e,r){if(r instanceof Map){const e=Object.create(null);return r.forEach(((r,t)=>{e[t]=r})),e}if(r instanceof Set){const e=[];return r.forEach((r=>{e.push(r)})),e}return r}Object.defineProperty(exports,"__esModule",{value:!0}),exports.replacer=void 0,exports.replacer=replacer;

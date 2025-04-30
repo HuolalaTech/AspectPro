@@ -1,0 +1,57 @@
+{
+  "name": "@ohos/hvigor",
+  "version": "5.2.2",
+  "description": "The ohos build system cli tools.",
+  "main": "./index.js",
+  "scripts": {
+    "patch-publish": "npm --no-git-tag-version version prepatch&&npm publish",
+    "prepack": "npm run ugly-build",
+    "build": "tsc -p .",
+    "watch": "tsc --watch",
+    "clean": "tsc --build --clean",
+    "rebuild": "npm run clean && npm run build",
+    "uglify": "node scripts/uglify.js",
+    "ugly-build": "npm run clean && npm run build && npm run uglify && npm run uglifypack",
+    "uglifypack": "node scripts/uglifypack.js",
+    "test": "jest",
+    "rollup:build": "rollup -c",
+    "coverage": "nyc --clean jest --coverage",
+    "fix": "eslint src/**/*.ts --fix"
+  },
+  "author": "huawei",
+  "ohos": {
+    "org": "huawei"
+  },
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "dependencies": {
+    "typescript": "4.9.5",
+    "log4js": "6.7.1",
+    "fs-extra": "11.1.0",
+    "commander": "11.0.0",
+    "socket.io": "4.5.4",
+    "socket.io-client": "4.7.2",
+    "semver": "7.5.4",
+    "@baize/wdk": "0.4.0",
+    "chokidar": "3.5.3",
+    "ws": "8.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.11",
+    "@types/ws": "8.2.3"
+  },
+  "keywords": [
+    "hvigor"
+  ],
+  "bundleDependencies": [
+    "typescript",
+    "log4js",
+    "fs-extra",
+    "commander",
+    "socket.io",
+    "socket.io-client",
+    "semver",
+    "@baize/wdk",
+    "chokidar",
+    "ws"
+  ]
+}

@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.ProjectCacheEntry=void 0;const tree_cache_entry_js_1=require("./tree-cache-entry.js");class ProjectCacheEntry extends tree_cache_entry_js_1.TreeCacheEntry{constructor(e,r){super(e,r)}}exports.ProjectCacheEntry=ProjectCacheEntry;

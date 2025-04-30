@@ -1,0 +1,1 @@
+"use strict";var Priority;Object.defineProperty(exports,"__esModule",{value:!0}),exports.Priority=void 0,function(r){r[r.FIRST=0]="FIRST",r[r.HEAVY=1]="HEAVY",r[r.MEDIUM=2]="MEDIUM",r[r.LIGHT=3]="LIGHT",r[r.LAST=4]="LAST"}(Priority=exports.Priority||(exports.Priority={}));

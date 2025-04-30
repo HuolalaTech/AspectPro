@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.traceBuildAnalyze=void 0;const hvigor_trace_js_1=require("./hvigor-trace.js");class TraceBuildAnalyze{constructor(){this.data={}}getData(){return{...this.data,...hvigor_trace_js_1.hvigorTrace}}set(e,t){this.data[e]=t}}exports.traceBuildAnalyze=new TraceBuildAnalyze;

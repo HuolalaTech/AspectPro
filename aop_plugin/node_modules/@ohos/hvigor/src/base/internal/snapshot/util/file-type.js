@@ -1,0 +1,1 @@
+"use strict";var FileType;Object.defineProperty(exports,"__esModule",{value:!0}),exports.FileType=void 0,function(e){e.FILE="file",e.DIRECTORY="directory",e.UNKNOWN="unknown"}(FileType=exports.FileType||(exports.FileType={}));

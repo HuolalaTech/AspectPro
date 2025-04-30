@@ -3,6 +3,7 @@ import { Logger } from '@huolala/logger';
 import { TestHttpClient } from '../test/TestHttpClient';
 import { TAG } from '../MyHookManager';
 import { router } from '@kit.ArkUI';
+import { TestClass2 } from '../test/TestClass2';
 
 @Entry
 @Component
@@ -31,6 +32,7 @@ struct Index {
       .width('80%')
       .height('6%')
       .onClick(() => {
+        TestClass2.testCalculator
         Logger.i(TAG, "1.Test_Btn_OnClick_Action_Hook Button clicked by user ...");
       })
 
@@ -45,10 +47,8 @@ struct Index {
       .width('80%')
       .height('6%')
       .onClick(() => {
-        TestClass1.a(() => {
-        })
-        new TestClass1().b("invoke method b", false)
-        new TestClass1().c("invoke method c")
+        router.
+          pushUrl({ url: "pages/Second" });
       })
 
       Button() {
@@ -76,7 +76,11 @@ struct Index {
       .width('80%')
       .height('6%')
       .onClick(() => {
-        TestHttpClient.testHttpGet()
+        //TestHttpClient.testHttpGet()
+        router
+          .
+        pushUrl({ url: "pages/Second" });
+        console.debug("router.pushUrl({ url:pages/Second});")
       })
     }
     .height('100%')

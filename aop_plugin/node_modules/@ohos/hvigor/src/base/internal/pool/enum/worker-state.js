@@ -1,0 +1,1 @@
+"use strict";var WorkerState;Object.defineProperty(exports,"__esModule",{value:!0}),exports.WorkerState=void 0,function(e){e[e.IDLE=0]="IDLE",e[e.BUSY=1]="BUSY",e[e.DEAD=2]="DEAD"}(WorkerState=exports.WorkerState||(exports.WorkerState={}));

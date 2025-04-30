@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.freezeDeep=void 0;const freezeDeep=e=>{Object.freeze(e);for(const r of Object.values(e))"object"!=typeof r||Object.isFrozen(r)||(0,exports.freezeDeep)(r);return e};exports.freezeDeep=freezeDeep;

@@ -7,6 +7,15 @@ import { TestClass1 } from '../test/TestClass1';
 import AspectPro from '@huolala/aspectpro';
 
 export default class EntryAbility extends UIAbility {
+
+  onDestroy(): void | Promise<void> {
+    Logger.d(TAG, "1.onDestroy->a()  method invoked");
+  }
+
+  onForeground(): void {
+    Logger.d(TAG, "1.onForeground->a()  method invoked");
+  }
+
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
 
     /**
@@ -33,9 +42,9 @@ export default class EntryAbility extends UIAbility {
       return result
     })
 
-    let newResult = new TestClass1().c("test 1234")
-
-    Logger.w(TAG, "newResult ..." + newResult);
+    // let newResult = new TestClass1().c("test 1234")
+    //
+    // Logger.w(TAG, "newResult ..." + newResult);
 
     /**
      * 用法二: 统一hook api
@@ -60,7 +69,6 @@ export default class EntryAbility extends UIAbility {
 
     // 4.hook httpClient method
     testHookHttpClientBuild()
-
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {

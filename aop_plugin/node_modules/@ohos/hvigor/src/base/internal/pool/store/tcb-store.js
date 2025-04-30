@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.TcbStore=void 0;class TcbStore{static getTCB(t){return TcbStore.tcbMap.get(t)}static clear(){TcbStore.tcbMap.clear()}static add(t){TcbStore.tcbMap.set(t.getId(),t)}}exports.TcbStore=TcbStore,TcbStore.tcbMap=new Map;

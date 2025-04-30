@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.MapCacheService=void 0;class MapCacheService{constructor(){this.cacheEntryMap=new Map}initialize(){}close(){this.cacheEntryMap.clear()}get(e){return this.cacheEntryMap.get(e)}remove(e){this.cacheEntryMap.delete(e)}size(){return this.cacheEntryMap.size}}exports.MapCacheService=MapCacheService;

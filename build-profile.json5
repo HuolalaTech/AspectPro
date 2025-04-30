@@ -5,17 +5,17 @@
         "name": "default",
         "signingConfig": "default",
         "compatibleSdkVersion": "5.0.0(12)",
-        "runtimeOS": "HarmonyOS",
+        "runtimeOS": "HarmonyOS"
       }
     ],
     "buildModeSet": [
       {
-        "name": "debug",
+        "name": "debug"
       },
       {
         "name": "release"
       }
-    ]
+    ],
   },
   "modules": [
     {
@@ -33,6 +33,10 @@
     {
       "name": "aop_library",
       "srcPath": "./aop_library",
-    }
+    },
+    /*{
+      "name": "local_plugin",
+      "srcPath": "./local_plugin",
+    }*/
   ]
 }

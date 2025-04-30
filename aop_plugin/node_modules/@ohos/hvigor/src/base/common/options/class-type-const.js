@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.ClassTypeConst=void 0;class ClassTypeConst{}exports.ClassTypeConst=ClassTypeConst,ClassTypeConst.HVIGOR_NODE="node",ClassTypeConst.HVIGOR_PROJECT="project",ClassTypeConst.HVIGOR_MODULE="module";

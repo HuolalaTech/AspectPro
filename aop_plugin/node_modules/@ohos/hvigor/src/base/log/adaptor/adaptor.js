@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.AdaptorError=void 0;class AdaptorError extends Error{constructor(r){super(r),this.name="AdaptorError"}}exports.AdaptorError=AdaptorError;

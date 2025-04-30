@@ -1,0 +1,8 @@
+{
+  "aopConfigs": [
+    {
+      "name": "YourSlowMethodAop",
+      "path": "./src/main/yourAop/YourDemoAop.ts"
+    }
+  ]
+}
