@@ -21,7 +21,7 @@
 1.Add and use the aspect-pro-plugin plugin 
   1.1 Add it to the project hvigor-package.json file
 "dependencies": {
-    "aspect-pro-plugin": "2.0.1"
+    "aspect-pro-plugin": "2.0.2"
   }
   1.2 Use it in the hvigorfile.ts file of the entry or other modules 
 import { aspectProPluginV2 } from 'aspect-pro-plugin';

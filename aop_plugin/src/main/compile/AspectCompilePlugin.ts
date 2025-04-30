@@ -64,7 +64,6 @@ function doTransform() {
       } else {
         aopPath = path.resolve(modulePath, config.path)
       }
-      console.log("realTransform() aopPath:" + aopPath);
       //@ts-ignore
       const aopImpClass = require(aopPath);
       if (aopImpClass && aopImpClass.doTransform) {

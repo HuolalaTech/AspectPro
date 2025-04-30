@@ -2,7 +2,7 @@
   "aopConfigs": [
     {
       "name": "YourSlowMethodAop",
-      "path": "./src/main/yourAop/YourSlowMethodAop.ts"
+      "path": "./src/main/yourAop/YourDemoAop.ts"
     }
   ]
 }

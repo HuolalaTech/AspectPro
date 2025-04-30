@@ -1,6 +1,6 @@
 {
   "name": "aspect-pro-plugin",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "aspect-pro-plugin is a HarmonyOs compile-time AST Aop plugin",
   "main": "index.ts",
   "scripts": {

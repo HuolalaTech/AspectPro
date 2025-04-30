@@ -13,6 +13,8 @@ const importPath = '@package:pkg_modules/.ohpm/@huolala+logger@1.0.0/pkg_modules
  *  函数开头插入 const startTime = Date.now();
  * step 二:
  *  函数结束插入 Logger.w(tag, `${methodId} took ${(Date.now() - startTime)} ms`)
+ *
+ * @see @see https://github.com/microsoft/TypeScript/blob/main/src/compiler/types.ts
  */
 export class YourSlowMethodTransform {
   static doTransform(ts) {

@@ -21,7 +21,7 @@
 1.添加并使用aspect-pro-plugin插件
   1.1 在工程hvigor-package.json文件中添加
 "dependencies": {
-    "aspect-pro-plugin": "2.0.1"
+    "aspect-pro-plugin": "2.0.2"
   }
   1.2 在entry或其他模块的 hvigorfile.ts文件中使用
 import { aspectProPluginV2 } from 'aspect-pro-plugin';
